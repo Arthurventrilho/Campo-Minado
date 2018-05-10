@@ -1,6 +1,7 @@
 import pygame
 import sys
 from pygame.locals import *
+import random
 
 
 # ===============      CLASSES      ===============
@@ -20,18 +21,18 @@ class Minerador(pygame.sprite.Sprite):
     def move(self):
         pressed_keys = pygame.key.get_pressed()
         movimento = self.speed
-        if pressed_keys[K_a] or (pressed_keys[K_a] and pressed_keys[K_w]):
+        if pressed_keys[K_LEFT] or (pressed_keys[K_LEFT] and pressed_keys[K_UP]):
             self.image = pygame.image.load("mineradorE.png")
             mover_x = -movimento
             mover_y = 0
-        elif pressed_keys[K_d] or (pressed_keys[K_d] and pressed_keys[K_w]):
+        elif pressed_keys[K_RIGHT] or (pressed_keys[K_RIGHT] and pressed_keys[K_UP]):
             self.image = pygame.image.load("mineradorD.png")
             mover_x = +movimento
             mover_y = 0
-        elif pressed_keys[K_s]:
+        elif pressed_keys[K_DOWN]:
             mover_x = 0
             mover_y = +movimento
-        elif pressed_keys[K_w] and pygame.sprite.spritecollide(minerador, escada_group, False):
+        elif pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, escada_group, False):
             mover_x = 0
             mover_y = -movimento  
 
@@ -44,16 +45,16 @@ class Minerador(pygame.sprite.Sprite):
     def colide(self):
         pressed_keys = pygame.key.get_pressed()
         movimento = self.speed + 1
-        if pressed_keys[K_a]:
+        if pressed_keys[K_LEFT]:
             mover_x = -movimento
             mover_y = 0
-        elif pressed_keys[K_d]:
+        elif pressed_keys[K_RIGHT]:
             mover_x = +movimento
             mover_y = 0
-        elif pressed_keys[K_w]:
+        elif pressed_keys[K_UP]:
             mover_x = 0
             mover_y = -movimento  
-        elif pressed_keys[K_s]:
+        elif pressed_keys[K_DOWN]:
             mover_x = 0
             mover_y = +movimento
         else:
@@ -63,6 +64,52 @@ class Minerador(pygame.sprite.Sprite):
         self.rect.y -= mover_y
         self.stamina -= 1
         
+    
+TERRA = 0
+FERRO = 1
+COBRE = 2
+OURO = 3
+RUBI = 4
+DIAMANTE = 5
+
+
+textura = {
+        TERRA : pygame.image.load("terra.png"),
+        FERRO : pygame.image.load("ferro.png"),
+        COBRE : pygame.image.load("diamante.png"),
+        OURO : pygame.image.load("ouro.png"),
+        RUBI : pygame.image.load("ruby.png"),
+        DIAMANTE : pygame.image.load("diamante.png")
+        }
+
+
+        
+TELA = 20
+LARGURA = 50
+ALTURA = 200
+
+resources = [TERRA, FERRO, COBRE, OURO, RUBI, DIAMANTE]
+mapa = [ [TERRA for w in range(LARGURA)] for h in range(ALTURA)]
+
+pygame.init()
+DISPLAYSURF = pygame.display.set_mode((LARGURA*TELA, ALTURA*TELA))
+
+for rw in range(ALTURA):
+    for cl in range(LARGURA):
+        randomNumber = random.randint(0,50)
+        
+        if randomNumber == 0:
+            tipo = DIAMANTE
+        elif randomNumber == 1 or randomNumber ==2 or randomNumber ==3:
+            tipo = RUBI
+        elif randomNumber >= 4 and  randomNumber <=6:
+            tipo = OURO
+        elif randomNumber >= 7 and randomNumber <= 10:
+            tipo = FERRO
+        else:
+            tipo = TERRA
+        mapa[rw][cl] = tipo
+    
     
      
 
@@ -88,16 +135,6 @@ class Sapato(pygame.sprite.Sprite):
         self.rect.y = pos_y
         self.speed = velocidade
 
-class Ferro(pygame.sprite.Sprite):
-    def __init__(self, arquivo_imagem, vida, pos_x, pos_y):
-        pygame.sprite.Sprite.__init__(self)
-
-        self.image = pygame.image.load(arquivo_imagem)
-        self.rect = self.image.get_rect()
-        self.rect.x = pos_x
-        self.rect.y = pos_y
-        self.life = vida
-
 class Terra(pygame.sprite.Sprite):
     def __init__(self, arquivo_imagem, vida, pos_x, pos_y):
         pygame.sprite.Sprite.__init__(self)
@@ -107,7 +144,57 @@ class Terra(pygame.sprite.Sprite):
         self.rect.x = pos_x
         self.rect.y = pos_y
         self.life = vida
+
+class Ferro(pygame.sprite.Sprite):
+    def __init__(self, arquivo_imagem, vida, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.image.load(arquivo_imagem)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.life = vida
         
+class COBRE(pygame.sprite.Sprite):
+    def __init__(self, arquivo_imagem, vida, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.image.load(arquivo_imagem)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.life = vida        
+
+class OURO(pygame.sprite.Sprite):
+    def __init__(self, arquivo_imagem, vida, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.image.load(arquivo_imagem)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.life = vida        
+        
+class RUBI(pygame.sprite.Sprite):
+    def __init__(self, arquivo_imagem, vida, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.image.load(arquivo_imagem)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.life = vida        
+
+class DIAMANTE(pygame.sprite.Sprite):
+    def __init__(self, arquivo_imagem, vida, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.image.load(arquivo_imagem)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.life = vida                
+
 class Escada(pygame.sprite.Sprite):
     def __init__(self, arquivo_imagem, pos_x, pos_y):
         pygame.sprite.Sprite.__init__(self)
@@ -127,14 +214,14 @@ while comando != 0:
     if comando == 1:
         
         fps = 30
-        ferro_quant = 0
+        
         
         x_display = 200
         display_W = 4 * x_display
         display_H = 3 * x_display
         
         tela = pygame.display.set_mode((display_W, display_H), 0, 32)
-        pygame.display.set_caption('Hello World')
+        pygame.display.set_caption('MINE GAME')
         
         # Carrega imagem de fundo.
         # (https://wallpapersafari.com/dark-green-background/)
@@ -148,13 +235,6 @@ while comando != 0:
         sapato_group = pygame.sprite.Group()
         sapato_group.add(sapato1)
         
-        
-        # Cria picareta e adiciona em um grupo de Sprites.
-        picareta1 = Picareta("mineradorD.png", 3, display_W * 0.75, display_H * 0.75 )
-        picareta_group = pygame.sprite.Group()
-        picareta_group.add(picareta1)
-        
-        # Cria bloco escada e adiciona em um grupo de Sprites.
         escada1 = Escada("escada1.png", display_W * 0.5, display_H * 0.25 - 10 )
         escada2 = Escada("escada1.png", display_W * 0.5, display_H * 0.35 - 10 )
         escada3 = Escada("escada1.png", display_W * 0.5, display_H * 0.45 - 10 )
@@ -185,6 +265,16 @@ while comando != 0:
         terra_group = pygame.sprite.Group()
         terra_group.add(terra1, terra2, terra3, terra4, terra5, terra6)
         terreno_group.add(terra1, terra2, terra3, terra4, terra5, terra6)
+        
+        # Cria picareta e adiciona em um grupo de Sprites.
+        picareta1 = Picareta("mineradorD.png", 3, display_W * 0.75, display_H * 0.75 )
+        picareta_group = pygame.sprite.Group()
+        picareta_group.add(picareta1)
+        
+        # Cria bloco escada e adiciona em um grupo de Sprites.
+        for row in range(ALTURA):
+            for column in range(LARGURA):
+                DISPLAYSURF.blit(textura[mapa[row][column]], (column*TELA, row*TELA))
         
         # Cria minerador e adiciona em um grupo de Sprites.
         minerador = Minerador("mineradorD.png", picareta1.damage, sapato1.speed, 200, fps*60, display_W * 0.5, display_H * 0.5 )
@@ -277,7 +367,7 @@ while comando != 0:
         tela.blit(fundo, (0, 0))
                       
         # Pinta os elementos do grupo de escadas na tela auxiliar.
-        escada_group.draw(tela)
+        #escada_group.draw(tela)
     
         # Pinta os elementos do grupo dos mineradores na tela auxiliar.
         minerador_group.draw(tela)

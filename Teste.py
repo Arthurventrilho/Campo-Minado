@@ -16,6 +16,9 @@ RUBI = 4
 DIAMANTE = 5
 
 
+
+
+
 textura = {
         TERRA : pygame.image.load("terra.png"),
         FERRO : pygame.image.load("ferro.png"),
@@ -28,8 +31,8 @@ textura = {
 
         
 TELA = 20
-LARGURA = 30
-ALTURA = 20
+LARGURA = 50
+ALTURA = 200
 
 resources = [TERRA, FERRO, COBRE, OURO, RUBI, DIAMANTE]
 mapa = [ [TERRA for w in range(LARGURA)] for h in range(ALTURA)]
@@ -45,9 +48,9 @@ for rw in range(ALTURA):
             tipo = DIAMANTE
         elif randomNumber == 1 or randomNumber ==2 or randomNumber ==3:
             tipo = RUBI
-        elif randomNumber >= 4 or randomNumber <=12:
+        elif randomNumber >= 4 and  randomNumber <=6:
             tipo = OURO
-        elif randomNumber >= 13 or randomNumber <= 28:
+        elif randomNumber >= 7 and randomNumber <= 10:
             tipo = FERRO
         else:
             tipo = TERRA
@@ -62,7 +65,7 @@ while True:
             
     for row in range(ALTURA):
         for column in range(LARGURA):
-           DISPLAYSURF.blit(textura[mapa[row][column]], column*TELA, row*TELA)
+           DISPLAYSURF.blit(textura[mapa[row][column]], (column*TELA, row*TELA))
             
     pygame.display.update()
     
