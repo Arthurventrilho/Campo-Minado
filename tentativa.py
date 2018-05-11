@@ -214,6 +214,7 @@ while comando != 0:
     if comando == 1:
         
         fps = 30
+        ferro_quant = 0
         
         
         x_display = 200
