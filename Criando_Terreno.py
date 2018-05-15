@@ -83,13 +83,10 @@ for linha in range(ALTURA):
             
             # Escolhe um tipo.
             randomNumber = random.randint(0, 1000)
-            
-            
-            if randomNumber >= 0 and  randomNumber <=69:
-                tipo = Bloco.OURO
-            elif randomNumber >= 70 and  randomNumber <=189:
+           
+            if randomNumber >= 0 and  randomNumber <=179:
                 tipo = Bloco.FERRO
-            elif randomNumber >= 190 and randomNumber <= 389:
+            elif randomNumber >= 180 and randomNumber <= 320:
                 tipo = Bloco.COBRE
             else:
                 tipo = Bloco.TERRA
@@ -115,11 +112,11 @@ for linha in range(ALTURA):
             # Escolhe um tipo.
             randomNumber = random.randint(0, 1000)
             
-            if randomNumber >= 0 and  randomNumber <=69:
+            if randomNumber >= 0 and  randomNumber <=89:
                 tipo = Bloco.OURO
-            elif randomNumber >= 70 and  randomNumber <=189:
+            elif randomNumber >= 90 and  randomNumber <=189:
                 tipo = Bloco.FERRO
-            elif randomNumber >= 190 and randomNumber <= 389:
+            elif randomNumber >= 190 and randomNumber <= 320:
                 tipo = Bloco.COBRE
             else:
                 tipo = Bloco.TERRA
@@ -144,12 +141,14 @@ for linha in range(ALTURA):
             # Escolhe um tipo.
             randomNumber = random.randint(0, 1000)
             
-            if randomNumber >= 0 and  randomNumber <=69:
+            if randomNumber >= 0 and  randomNumber <=89:
                 tipo = Bloco.OURO
-            elif randomNumber >= 70 and  randomNumber <=189:
+            elif randomNumber >= 90 and  randomNumber <=189:
                 tipo = Bloco.FERRO
-            elif randomNumber >= 190 and randomNumber <= 389:
+            elif randomNumber >= 190 and randomNumber <= 320:
                 tipo = Bloco.COBRE
+            elif randomNumber >= 321 and randomNumber <= 370:
+               tipo = Bloco.RUBI
             else:
                 tipo = Bloco.TERRA
         
@@ -173,12 +172,16 @@ for linha in range(ALTURA):
             # Escolhe um tipo.
             randomNumber = random.randint(0, 1000)
             
-            if randomNumber >= 0 and  randomNumber <=69:
+            if randomNumber >= 0 and  randomNumber <=89:
                 tipo = Bloco.OURO
-            elif randomNumber >= 70 and  randomNumber <=189:
+            elif randomNumber >= 90 and  randomNumber <=189:
                 tipo = Bloco.FERRO
-            elif randomNumber >= 190 and randomNumber <= 389:
+            elif randomNumber >= 190 and randomNumber <= 280:
                 tipo = Bloco.COBRE
+            elif randomNumber >= 280 and randomNumber <= 320:
+               tipo = Bloco.RUBI
+            elif randomNumber >= 321 and randomNumber <= 370:
+               tipo = Bloco.DIAMANTE
             else:
                 tipo = Bloco.TERRA
         
