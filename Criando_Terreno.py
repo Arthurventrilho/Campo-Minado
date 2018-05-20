@@ -69,7 +69,7 @@ class Minerador(pygame.sprite.Sprite):
         elif pressed_keys[K_DOWN]:
             mover_x = 0
             mover_y = +movimento
-        elif pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, escadas_group, False):
+        elif pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, mapa[linhaJogador][1], False):
             mover_x = 0
             mover_y = -movimento  
 
@@ -377,25 +377,33 @@ while True:
     minerador.move()
     
     
-#    Colisao_Blocos(linhaJogador)
+
     print(mapa[linhaJogador][0], mapa[linhaJogador][1])
             
     Colisao_Blocos()
     
-        
-    for escada in escadas_group:
+    
+    #FAzendo Esxcadas
+    contadorEscadas = 0          
+    for escada in mapa[linhaJogador][1]:
         if colunaJogador != escada.rect.x // TELA:
-            pressed_keys = pygame.key.get_pressed()
-            if pressed_keys[K_UP]:
-                tipo = Bloco.ESCADA
-                # Calcula a posição.
-                pos_x = colunaJogador *TELA
-                pos_y = linhaJogador * TELA
-                # Cria o bloco e adiciona no mapa e no grupo.
-                novo_bloco = Bloco(tipo, pos_x, pos_y)
-                mapa[linhaJogador][1].add(novo_bloco)
-                escadas_group.add(novo_bloco)
-                escadas_group.draw(DISPLAYSURF) 
+            contadorEscadas += 0
+        else:
+            contadorEscadas += 1
+            
+
+            
+    pressed_keys = pygame.key.get_pressed()
+    if contadorEscadas == 0 and pressed_keys[K_UP] and linhaJogador > 5:
+        tipo = Bloco.ESCADA
+        # Calcula a posição.
+        pos_x = colunaJogador *TELA
+        pos_y = linhaJogador * TELA
+        # Cria o bloco e adiciona no mapa e no grupo.
+        novo_bloco = Bloco(tipo, pos_x, pos_y)
+        mapa[linhaJogador][1].add(novo_bloco)
+        escadas_group.add(novo_bloco)
+    # Fim Escadas
                 
     
 
