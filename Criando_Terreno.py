@@ -2,6 +2,128 @@ import pygame
 import random
 from pygame.locals import *
 
+def FazEscadas():
+    pressed_keys = pygame.key.get_pressed()
+    if pressed_keys[K_UP]:
+        if pygame.sprite.spritecollide(minerador, mapa[linhaJogador][1], False):
+            x =2
+        else:
+            if numeroEscadas > 0:
+                tipo = Bloco.ESCADA
+                # Calcula a posição.
+                pos_x = linhaJogador * TELA
+                pos_y = colunaJogador * TELA
+                # Cria o bloco e adiciona no mapa e no grupo.
+                novo_bloco = Bloco(tipo, pos_x, pos_y)
+                mapa[linhaJogador][1].add(novo_bloco)
+                escadas_group.add(novo_bloco)
+                
+                
+
+
+def Colisao_Blocos():
+    
+    #Se o minerador bate nos blocos 
+    for bloco in pygame.sprite.spritecollide(minerador, mapa[linhaJogador-1][0], False):
+        bloco.life -= minerador.damage
+        minerador.colide()
+        if bloco.life <=0:
+            bloco.kill()
+    #Se o minerador bate nos blocos 
+    for bloco in pygame.sprite.spritecollide(minerador, mapa[linhaJogador][0], False):
+        bloco.life -= minerador.damage
+        minerador.colide()
+        if bloco.life <=0:
+            bloco.kill()
+    #Se o minerador bate nos blocos 
+    for bloco in pygame.sprite.spritecollide(minerador, mapa[linhaJogador+1][0], False):
+        bloco.life -= minerador.damage
+        minerador.colide()
+        if bloco.life <=0:
+            bloco.kill()
+# ===============      CLASSES      ===============
+class Minerador(pygame.sprite.Sprite):
+    def __init__(self, arquivo_imagem, picaretaDamage, sapatoSpeed, stamina, sono, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.image = pygame.image.load(arquivo_imagem)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.damage = picaretaDamage
+        self.speed = sapatoSpeed
+        self.stamina = stamina
+        self.sleep = sono
+
+    def move(self):
+        pressed_keys = pygame.key.get_pressed()
+        movimento = self.speed
+        if pressed_keys[K_LEFT] or (pressed_keys[K_LEFT] and pressed_keys[K_UP]):
+            self.image = pygame.image.load("mineradorE.png")
+            mover_x = -movimento
+            mover_y = 0
+        elif pressed_keys[K_RIGHT] or (pressed_keys[K_RIGHT] and pressed_keys[K_UP]):
+            self.image = pygame.image.load("mineradorD.png")
+            mover_x = +movimento
+            mover_y = 0
+        elif pressed_keys[K_DOWN]:
+            mover_x = 0
+            mover_y = +movimento
+        elif pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, escadas_group, False):
+            mover_x = 0
+            mover_y = -movimento  
+
+        else:
+            mover_x = 0
+            mover_y = 0
+        self.rect.x += mover_x
+        self.rect.y += mover_y
+        
+    def colide(self):
+        pressed_keys = pygame.key.get_pressed()
+        movimento = self.speed + 1
+        if pressed_keys[K_LEFT]:
+            mover_x = -movimento
+            mover_y = 0
+        elif pressed_keys[K_RIGHT]:
+            mover_x = +movimento
+            mover_y = 0
+        elif pressed_keys[K_UP]:
+            mover_x = 0
+            mover_y = -movimento  
+        elif pressed_keys[K_DOWN]:
+            mover_x = 0
+            mover_y = +movimento
+        else:
+            mover_x = 0
+            mover_y = 0
+        self.rect.x -= mover_x
+        self.rect.y -= mover_y
+        self.stamina -= 1
+
+
+class Picareta(pygame.sprite.Sprite):
+    def __init__(self, arquivo_imagem, dano, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+
+    
+        self.image = pygame.image.load(arquivo_imagem)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.damage = dano
+
+class Sapato(pygame.sprite.Sprite):
+    def __init__(self, arquivo_imagem, velocidade, pos_x, pos_y):
+        pygame.sprite.Sprite.__init__(self)
+
+    
+        self.image = pygame.image.load(arquivo_imagem)
+        self.rect = self.image.get_rect()
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.speed = velocidade
+
 class BlocoParams:
     def __init__(self, image, vida):
         self.image = image
@@ -43,17 +165,51 @@ BLUE = (0, 0, 255)
 
 TELA = 40
 LARGURA = 31
-ALTURA = 809
+ALTURA = 15
+
+#RELOGIO   
+relogio = pygame.time.Clock()
+
+numeroEscadas = 1
 
 pygame.init()
+
+
+
+tempo = relogio.tick(30)
+
 DISPLAYSURF = pygame.display.set_mode((LARGURA*TELA, ALTURA*TELA))
+
+fundo = pygame.image.load("fundo.jpg").convert()
+
+
+
+# Cria sapato e adiciona em um grupo de Sprites.
+sapato1 = Sapato("mineradorD.png", 3, 40, 40 )
+sapato_group = pygame.sprite.Group()
+sapato_group.add(sapato1)
+
+
+# Cria picareta e adiciona em um grupo de Sprites.
+picareta1 = Picareta("mineradorD.png", 1, 40, 40 )
+picareta_group = pygame.sprite.Group()
+picareta_group.add(picareta1)
+
+
+# Cria minerador e adiciona em um grupo de Sprites.
+minerador = Minerador("mineradorD.png", picareta1.damage, sapato1.speed, 200, 30*60, 15 * 40, (5 * 40) + 10 )
+minerador_group = pygame.sprite.Group()
+minerador_group.add(minerador)
 
 # Criando os blocos de minerio.
 blocos_group = pygame.sprite.Group()
+escadas_group = pygame.sprite.Group()
 
 mapa = []
 for linha in range(ALTURA):
-    blocos_linha = []
+    blocos_linha = pygame.sprite.Group()
+    escadas_linha = pygame.sprite.Group()
+    linha_sprites = []
     if linha > 5 and linha <= 10:
         for coluna in range(LARGURA):
             if coluna == int(LARGURA / 2):
@@ -70,13 +226,20 @@ for linha in range(ALTURA):
             
             # Cria o bloco e adiciona no mapa e no grupo.
             novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.append(novo_bloco)
-            blocos_group.add(novo_bloco)
 
-    mapa.append(blocos_linha)
+            if novo_bloco.tipo == 6:
+                escadas_group.add(novo_bloco)
+                escadas_linha.add(novo_bloco)
+            else:
+                blocos_group.add(novo_bloco)
+                blocos_linha.add(novo_bloco)
+            
+    linha_sprites.append(blocos_linha)
+    linha_sprites.append(escadas_linha)
+    mapa.append(linha_sprites)
     
 for linha in range(ALTURA):
-    blocos_linha = []
+    blocos_linha = pygame.sprite.Group()
     if linha > 10 and linha <= 109:
         for coluna in range(LARGURA):
             # Criando um novo bloco:
@@ -97,14 +260,14 @@ for linha in range(ALTURA):
             
             # Cria o bloco e adiciona no mapa e no grupo.
             novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.append(novo_bloco)
+            blocos_linha.add(novo_bloco)
             blocos_group.add(novo_bloco)
 
     mapa.append(blocos_linha)
     
     
 for linha in range(ALTURA):
-    blocos_linha = []
+    blocos_linha = pygame.sprite.Group()
     if linha >= 110 and linha <= 209:
         for coluna in range(LARGURA):
             # Criando um novo bloco:
@@ -127,13 +290,13 @@ for linha in range(ALTURA):
             
             # Cria o bloco e adiciona no mapa e no grupo.
             novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.append(novo_bloco)
+            blocos_linha.add(novo_bloco)
             blocos_group.add(novo_bloco)
 
     mapa.append(blocos_linha)
     
 for linha in range(ALTURA):
-    blocos_linha = []
+    blocos_linha = pygame.sprite.Group()
     if linha >= 210 and linha <= 509:
         for coluna in range(LARGURA):
             # Criando um novo bloco:
@@ -158,13 +321,13 @@ for linha in range(ALTURA):
             
             # Cria o bloco e adiciona no mapa e no grupo.
             novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.append(novo_bloco)
+            blocos_linha.add(novo_bloco)
             blocos_group.add(novo_bloco)
 
     mapa.append(blocos_linha)
     
 for linha in range(ALTURA):
-    blocos_linha = []
+    blocos_linha = pygame.sprite.Group()
     if linha >= 510 and linha <= ALTURA:
         for coluna in range(LARGURA):
             # Criando um novo bloco:
@@ -191,7 +354,7 @@ for linha in range(ALTURA):
             
             # Cria o bloco e adiciona no mapa e no grupo.
             novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.append(novo_bloco)
+            blocos_linha.add(novo_bloco)
             blocos_group.add(novo_bloco)
 
     mapa.append(blocos_linha)
@@ -201,7 +364,45 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             quit()
+            
+            
+    #
+    linhaJogador = minerador.rect.y // TELA
+    colunaJogador = minerador.rect.x // TELA
+    
+    print(colunaJogador, linhaJogador)
+    print(minerador.rect.x, minerador.rect.y)
+            
+    # Move o minerador pela tela.
+    minerador.move()
+    
+    
+#    Colisao_Blocos(linhaJogador)
+    print(mapa[linhaJogador][0], mapa[linhaJogador][1])
+            
+    Colisao_Blocos()
+    
+        
+    for escada in escadas_group:
+        if colunaJogador != escada.rect.x // TELA:
+            pressed_keys = pygame.key.get_pressed()
+            if pressed_keys[K_UP]:
+                tipo = Bloco.ESCADA
+                # Calcula a posição.
+                pos_x = colunaJogador *TELA
+                pos_y = linhaJogador * TELA
+                # Cria o bloco e adiciona no mapa e no grupo.
+                novo_bloco = Bloco(tipo, pos_x, pos_y)
+                mapa[linhaJogador][1].add(novo_bloco)
+                escadas_group.add(novo_bloco)
+                escadas_group.draw(DISPLAYSURF) 
+                
+    
 
+    DISPLAYSURF.blit(fundo, (0, 0))    
+    escadas_group.draw(DISPLAYSURF) 
+    minerador_group.draw(DISPLAYSURF) 
+    
     blocos_group.draw(DISPLAYSURF)    
     pygame.display.update()
     
