@@ -1,23 +1,6 @@
 import pygame
 import random
 from pygame.locals import *
-
-def FazEscadas():
-    pressed_keys = pygame.key.get_pressed()
-    if pressed_keys[K_UP]:
-        if pygame.sprite.spritecollide(minerador, mapa[linhaJogador][1], False):
-            x =2
-        else:
-            if numeroEscadas > 0:
-                tipo = Bloco.ESCADA
-                # Calcula a posição.
-                pos_x = linhaJogador * TELA
-                pos_y = colunaJogador * TELA
-                # Cria o bloco e adiciona no mapa e no grupo.
-                novo_bloco = Bloco(tipo, pos_x, pos_y)
-                mapa[linhaJogador][1].add(novo_bloco)
-                escadas_group.add(novo_bloco)
-                
                 
 
 
@@ -41,6 +24,28 @@ def Colisao_Blocos():
         minerador.colide()
         if bloco.life <=0:
             bloco.kill()
+            
+            
+def Escadas_de_Volta():
+    contador = 0
+    pressed_keys = pygame.key.get_pressed()
+    #Se o minerador bate nos blocos 
+    for escada in pygame.sprite.spritecollide(minerador, mapa[linhaJogador-1][1], False):
+        if pressed_keys[K_e]:
+            escada.kill()
+            contador += 1
+    #Se o minerador bate nos blocos 
+    for escada in pygame.sprite.spritecollide(minerador, mapa[linhaJogador][1], False):
+        if pressed_keys[K_e]:
+            escada.kill()
+            contador += 1
+    #Se o minerador bate nos blocos 
+    for escada in pygame.sprite.spritecollide(minerador, mapa[linhaJogador+1][1], False):
+        if pressed_keys[K_e]:
+            escada.kill()
+            contador += 1
+            
+    return contador
 # ===============      CLASSES      ===============
 class Minerador(pygame.sprite.Sprite):
     def __init__(self, arquivo_imagem, picaretaDamage, sapatoSpeed, stamina, sono, pos_x, pos_y):
@@ -69,7 +74,9 @@ class Minerador(pygame.sprite.Sprite):
         elif pressed_keys[K_DOWN]:
             mover_x = 0
             mover_y = +movimento
-        elif pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, mapa[linhaJogador][1], False):
+        elif pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, mapa[linhaJogador - 1][1], False)\
+            or pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, mapa[linhaJogador][1], False)\
+            or pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, mapa[linhaJogador + 1][1], False):
             mover_x = 0
             mover_y = -movimento  
 
@@ -170,7 +177,7 @@ ALTURA = 15
 #RELOGIO   
 relogio = pygame.time.Clock()
 
-numeroEscadas = 1
+numeroEscadas = 10
 
 pygame.init()
 
@@ -379,6 +386,7 @@ while True:
     
 
     print(mapa[linhaJogador][0], mapa[linhaJogador][1])
+    print(numeroEscadas)
             
     Colisao_Blocos()
     
@@ -394,7 +402,7 @@ while True:
 
             
     pressed_keys = pygame.key.get_pressed()
-    if contadorEscadas == 0 and pressed_keys[K_UP] and linhaJogador > 5:
+    if contadorEscadas == 0 and pressed_keys[K_UP] and linhaJogador > 5 and numeroEscadas > 0:
         tipo = Bloco.ESCADA
         # Calcula a posição.
         pos_x = colunaJogador *TELA
@@ -403,6 +411,13 @@ while True:
         novo_bloco = Bloco(tipo, pos_x, pos_y)
         mapa[linhaJogador][1].add(novo_bloco)
         escadas_group.add(novo_bloco)
+        numeroEscadas -= 1
+        
+    numeroEscadas += Escadas_de_Volta()
+        
+        
+        
+    
     # Fim Escadas
                 
     
