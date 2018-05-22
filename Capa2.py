@@ -1,11 +1,9 @@
 import pygame
 import time
-import random
- 
 pygame.init()
  
-display_width = 800
-display_height = 600
+LARGURA = 800
+ALTURA = 600
  
 black = (0,0,0)
 white = (255,255,255)
@@ -18,7 +16,7 @@ block_color = (53,115,255)
  
 
  
-gameDisplay = pygame.display.set_mode((display_width,display_height))
+gameDisplay = pygame.display.set_mode((LARGURA,ALTURA))
 pygame.display.set_caption('Mine Game')
 clock = pygame.time.Clock()
  
@@ -34,7 +32,7 @@ def text_objects(text, font):
 def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf',115)
     TextSurf, TextRect = text_objects(text, largeText)
-    TextRect.center = ((display_width/2),(display_height/2))
+    TextRect.center = ((LARGURA/2),(ALTURA/2))
     gameDisplay.blit(TextSurf, TextRect)
  
     pygame.display.update()
@@ -57,6 +55,8 @@ def button(msg, x, y, w, h, ic, ac, action = None):
                 elif action == "quit":
                     pygame.quit()
                     quit()
+                elif action == "Inst":
+                    configuration()
    else:    
            pygame.draw.rect(gameDisplay, ic,(x,y,w,h))
   
@@ -69,6 +69,8 @@ def button(msg, x, y, w, h, ic, ac, action = None):
 
         
 def game_intro():
+    
+    fundo = pygame.image.load("FUNDO.png")
 
     intro = True
 
@@ -78,18 +80,17 @@ def game_intro():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-                
-        gameDisplay.fill(white)
+
+        gameDisplay.blit(fundo, (0,0))
+
         largeText = pygame.font.Font('freesansbold.ttf',115)
         TextSurf, TextRect = text_objects("MINE GAME", largeText)
-        TextRect.center = ((display_width/2),(display_height/3))
+        TextRect.center = ((LARGURA/2),(ALTURA/3))
         gameDisplay.blit(TextSurf, TextRect)
         
         button("JOGAR", 150,450,100,50, green, bright_green,"play")
         button("SAIR", 550,450,100,50, red, bright_red,"quit")
             
-
-
         pygame.display.update()
         clock.tick(15)
     
@@ -110,24 +111,58 @@ def game_loop():
 
         gameDisplay.fill(white)
         largeText = pygame.font.Font('freesansbold.ttf',50)
-        TextSurf, TextRect = text_objects("INSTRUÇÕES", largeText)
-        TextRect.center = ((display_width/2),(display_height/5))
+        TextSurf, TextRect = text_objects("Sobre o jogo:", largeText)
+        TextRect.center = ((LARGURA/2),(ALTURA/5))
         gameDisplay.blit(TextSurf, TextRect)
         largeText = pygame.font.Font('freesansbold.ttf',20)
-        TextSurf1, TextRect = text_objects("Mine game consite em um jogo onde o objetivo e parmenecer", largeText)
-        TextRect.center = ((display_width/2),(display_height/2.4))
+        TextSurf1, TextRect = text_objects("Mine game consite em um jogo onde o objetivo é parmenecer", largeText)
+        TextRect.center = ((LARGURA/2),(ALTURA/2.4))
         gameDisplay.blit(TextSurf1, TextRect)
-        TextSurf2, TextRect = text_objects("vivo pelo maximo de tempo possivel, mas tome cuidado", largeText)
-        TextRect.center = ((display_width/2),(display_height/2))
+        TextSurf2, TextRect = text_objects("vivo pelo máximo de tempo possível, mas tome cuidado", largeText)
+        TextRect.center = ((LARGURA/2),(ALTURA/2))
         gameDisplay.blit(TextSurf2, TextRect)
-        TextSurf3, TextRect = text_objects("se sua estamia acabar sera GAME OVER", largeText)
-        TextRect.center = ((display_width/2),(display_height/1.7))
+        TextSurf3, TextRect = text_objects("se sua estamia acabar será GAME OVER", largeText)
+        TextRect.center = ((LARGURA/2),(ALTURA/1.7))
         gameDisplay.blit(TextSurf3, TextRect)
         
-        button("INICIAR", 350,450,100,50, green, bright_green,"play")
+        button("Jogar", 350,450,100,50, green, bright_green,"Inst")
         
         pygame.display.update()
         clock.tick(60)
+        
+        
+def configuration():
+
+    gameExit = False
+ 
+    while not gameExit:
+ 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+ 
+
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',50)
+        TextSurf, TextRect = text_objects("Comando:", largeText)
+        TextRect.center = ((LARGURA/2),(ALTURA/5))
+        gameDisplay.blit(TextSurf, TextRect)
+        largeText = pygame.font.Font('freesansbold.ttf',20)
+        TextSurf1, TextRect = text_objects("E - pega escada", largeText)
+        TextRect.center = ((LARGURA/2),(ALTURA/2.4))
+        gameDisplay.blit(TextSurf1, TextRect)
+        TextSurf2, TextRect = text_objects("L - entra na loja", largeText)
+        TextRect.center = ((LARGURA/2),(ALTURA/2))
+        gameDisplay.blit(TextSurf2, TextRect)
+        TextSurf3, TextRect = text_objects("S - entrar na casa para dormir", largeText)
+        TextRect.center = ((LARGURA/2),(ALTURA/1.7))
+        gameDisplay.blit(TextSurf3, TextRect)
+        
+        button("Jogar", 350,450,100,50, green, bright_green,"Inst")
+        
+        pygame.display.update()
+        clock.tick(120)    
 
 game_intro()
 game_loop()
