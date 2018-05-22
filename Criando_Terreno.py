@@ -25,6 +25,32 @@ def Colisao_Blocos():
         if bloco.life <=0:
             bloco.kill()
             
+
+def FazendoEscadas(numeroEscadas): 
+    numero = 0           
+    contadorEscadas = 0          
+    for escada in mapa[linhaJogador][1]:
+        if colunaJogador != escada.rect.x // TELA:
+            contadorEscadas += 0
+        else:
+            contadorEscadas += 1
+            
+
+            
+    pressed_keys = pygame.key.get_pressed()
+    if contadorEscadas == 0 and pressed_keys[K_UP] and linhaJogador > 5 and numeroEscadas > 0:
+        tipo = Bloco.ESCADA
+        # Calcula a posição.
+        pos_x = colunaJogador *TELA
+        pos_y = linhaJogador * TELA
+        # Cria o bloco e adiciona no mapa e no grupo.
+        novo_bloco = Bloco(tipo, pos_x, pos_y)
+        mapa[linhaJogador][1].add(novo_bloco)
+        escadas_group.add(novo_bloco)
+        numero = 1
+    return numero
+        
+            
             
 def Escadas_de_Volta():
     contador = 0
@@ -47,11 +73,17 @@ def Escadas_de_Volta():
             
     return contador
 # ===============      CLASSES      ===============
+class MineradorImagem():
+    def __init__(self, image1, image2):
+        self.image1 = pygame.image.load(image1)
+        self.image2 = pygame.image.load(image2)
+    
+
 class Minerador(pygame.sprite.Sprite):
     def __init__(self, arquivo_imagem, picaretaDamage, sapatoSpeed, stamina, sono, pos_x, pos_y):
         pygame.sprite.Sprite.__init__(self)
         
-        self.image = pygame.image.load(arquivo_imagem)
+        self.image = arquivo_imagem
         self.rect = self.image.get_rect()
         self.rect.x = pos_x
         self.rect.y = pos_y
@@ -64,11 +96,11 @@ class Minerador(pygame.sprite.Sprite):
         pressed_keys = pygame.key.get_pressed()
         movimento = self.speed
         if pressed_keys[K_LEFT] or (pressed_keys[K_LEFT] and pressed_keys[K_UP]):
-            self.image = pygame.image.load("mineradorE.png")
+            self.image = mineradorImagem.image2
             mover_x = -movimento
             mover_y = 0
         elif pressed_keys[K_RIGHT] or (pressed_keys[K_RIGHT] and pressed_keys[K_UP]):
-            self.image = pygame.image.load("mineradorD.png")
+            self.image = mineradorImagem.image1
             mover_x = +movimento
             mover_y = 0
         elif pressed_keys[K_DOWN]:
@@ -204,7 +236,8 @@ picareta_group.add(picareta1)
 
 
 # Cria minerador e adiciona em um grupo de Sprites.
-minerador = Minerador("mineradorD.png", picareta1.damage, sapato1.speed, 200, 30*60, 15 * 40, (5 * 40) + 10 )
+mineradorImagem = MineradorImagem("mineradorD.png", "mineradorE.png")
+minerador = Minerador(mineradorImagem.image1 , picareta1.damage, sapato1.speed, 200, 30*60, 15 * 40, (5 * 40) + 10 )
 minerador_group = pygame.sprite.Group()
 minerador_group.add(minerador)
 
@@ -240,131 +273,108 @@ for linha in range(ALTURA):
             else:
                 blocos_group.add(novo_bloco)
                 blocos_linha.add(novo_bloco)
+                
+    if linha > 10 and linha <= 200:
+        for coluna in range(LARGURA):
+            
+            randomNumber = random.randint(0, 1000)
+            
+            # Criando um novo bloco:
+            # Escolhe um tipo.
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.TERRA
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.FERRO
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.COBRE
+        
+            # Calcula a posição.
+            pos_x = coluna*TELA
+            pos_y = linha*TELA
+            
+            # Cria o bloco e adiciona no mapa e no grupo.
+            novo_bloco = Bloco(tipo, pos_x, pos_y)
+     
+            blocos_group.add(novo_bloco)
+            blocos_linha.add(novo_bloco)
+    
+    if linha > 200 and linha <= 350:
+        for coluna in range(LARGURA):
+            
+            randomNumber = random.randint(0, 1000)
+            
+            # Criando um novo bloco:
+            # Escolhe um tipo.
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.TERRA
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.FERRO
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.COBRE
+        
+            # Calcula a posição.
+            pos_x = coluna*TELA
+            pos_y = linha*TELA
+            
+            # Cria o bloco e adiciona no mapa e no grupo.
+            novo_bloco = Bloco(tipo, pos_x, pos_y)
+     
+            blocos_group.add(novo_bloco)
+            blocos_linha.add(novo_bloco)
+            
+    if linha > 350 and linha <= 600:
+        for coluna in range(LARGURA):
+            
+            randomNumber = random.randint(0, 1000)
+            
+            # Criando um novo bloco:
+            # Escolhe um tipo.
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.TERRA
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.FERRO
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.COBRE
+        
+            # Calcula a posição.
+            pos_x = coluna*TELA
+            pos_y = linha*TELA
+            
+            # Cria o bloco e adiciona no mapa e no grupo.
+            novo_bloco = Bloco(tipo, pos_x, pos_y)
+     
+            blocos_group.add(novo_bloco)
+            blocos_linha.add(novo_bloco)
+            
+    if linha > 600 and linha <= 850:
+        for coluna in range(LARGURA):
+            
+            randomNumber = random.randint(0, 1000)
+            
+            # Criando um novo bloco:
+            # Escolhe um tipo.
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.TERRA
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.FERRO
+            if randomNumber >= 0 and randomNumber <=1000:
+                tipo = Bloco.COBRE
+        
+            # Calcula a posição.
+            pos_x = coluna*TELA
+            pos_y = linha*TELA
+            
+            # Cria o bloco e adiciona no mapa e no grupo.
+            novo_bloco = Bloco(tipo, pos_x, pos_y)
+     
+            blocos_group.add(novo_bloco)
+            blocos_linha.add(novo_bloco)
             
     linha_sprites.append(blocos_linha)
     linha_sprites.append(escadas_linha)
     mapa.append(linha_sprites)
     
-for linha in range(ALTURA):
-    blocos_linha = pygame.sprite.Group()
-    if linha > 10 and linha <= 109:
-        for coluna in range(LARGURA):
-            # Criando um novo bloco:
-            
-            # Escolhe um tipo.
-            randomNumber = random.randint(0, 1000)
-           
-            if randomNumber >= 0 and  randomNumber <=179:
-                tipo = Bloco.FERRO
-            elif randomNumber >= 180 and randomNumber <= 320:
-                tipo = Bloco.COBRE
-            else:
-                tipo = Bloco.TERRA
-        
-            # Calcula a posição.
-            pos_x = coluna*TELA
-            pos_y = linha*TELA
-            
-            # Cria o bloco e adiciona no mapa e no grupo.
-            novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.add(novo_bloco)
-            blocos_group.add(novo_bloco)
 
-    mapa.append(blocos_linha)
-    
-    
-for linha in range(ALTURA):
-    blocos_linha = pygame.sprite.Group()
-    if linha >= 110 and linha <= 209:
-        for coluna in range(LARGURA):
-            # Criando um novo bloco:
-            
-            # Escolhe um tipo.
-            randomNumber = random.randint(0, 1000)
-            
-            if randomNumber >= 0 and  randomNumber <=89:
-                tipo = Bloco.OURO
-            elif randomNumber >= 90 and  randomNumber <=189:
-                tipo = Bloco.FERRO
-            elif randomNumber >= 190 and randomNumber <= 320:
-                tipo = Bloco.COBRE
-            else:
-                tipo = Bloco.TERRA
-        
-            # Calcula a posição.
-            pos_x = coluna*TELA
-            pos_y = linha*TELA
-            
-            # Cria o bloco e adiciona no mapa e no grupo.
-            novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.add(novo_bloco)
-            blocos_group.add(novo_bloco)
-
-    mapa.append(blocos_linha)
-    
-for linha in range(ALTURA):
-    blocos_linha = pygame.sprite.Group()
-    if linha >= 210 and linha <= 509:
-        for coluna in range(LARGURA):
-            # Criando um novo bloco:
-            
-            # Escolhe um tipo.
-            randomNumber = random.randint(0, 1000)
-            
-            if randomNumber >= 0 and  randomNumber <=89:
-                tipo = Bloco.OURO
-            elif randomNumber >= 90 and  randomNumber <=189:
-                tipo = Bloco.FERRO
-            elif randomNumber >= 190 and randomNumber <= 320:
-                tipo = Bloco.COBRE
-            elif randomNumber >= 321 and randomNumber <= 370:
-               tipo = Bloco.RUBI
-            else:
-                tipo = Bloco.TERRA
-        
-            # Calcula a posição.
-            pos_x = coluna*TELA
-            pos_y = linha*TELA
-            
-            # Cria o bloco e adiciona no mapa e no grupo.
-            novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.add(novo_bloco)
-            blocos_group.add(novo_bloco)
-
-    mapa.append(blocos_linha)
-    
-for linha in range(ALTURA):
-    blocos_linha = pygame.sprite.Group()
-    if linha >= 510 and linha <= ALTURA:
-        for coluna in range(LARGURA):
-            # Criando um novo bloco:
-            
-            # Escolhe um tipo.
-            randomNumber = random.randint(0, 1000)
-            
-            if randomNumber >= 0 and  randomNumber <=89:
-                tipo = Bloco.OURO
-            elif randomNumber >= 90 and  randomNumber <=189:
-                tipo = Bloco.FERRO
-            elif randomNumber >= 190 and randomNumber <= 280:
-                tipo = Bloco.COBRE
-            elif randomNumber >= 280 and randomNumber <= 320:
-               tipo = Bloco.RUBI
-            elif randomNumber >= 321 and randomNumber <= 370:
-               tipo = Bloco.DIAMANTE
-            else:
-                tipo = Bloco.TERRA
-        
-            # Calcula a posição.
-            pos_x = coluna*TELA
-            pos_y = linha*TELA
-            
-            # Cria o bloco e adiciona no mapa e no grupo.
-            novo_bloco = Bloco(tipo, pos_x, pos_y)
-            blocos_linha.add(novo_bloco)
-            blocos_group.add(novo_bloco)
-
-    mapa.append(blocos_linha)
 
 while True:
     for event in pygame.event.get():
@@ -391,33 +401,12 @@ while True:
     Colisao_Blocos()
     
     
-    #FAzendo Esxcadas
-    contadorEscadas = 0          
-    for escada in mapa[linhaJogador][1]:
-        if colunaJogador != escada.rect.x // TELA:
-            contadorEscadas += 0
-        else:
-            contadorEscadas += 1
-            
-
-            
-    pressed_keys = pygame.key.get_pressed()
-    if contadorEscadas == 0 and pressed_keys[K_UP] and linhaJogador > 5 and numeroEscadas > 0:
-        tipo = Bloco.ESCADA
-        # Calcula a posição.
-        pos_x = colunaJogador *TELA
-        pos_y = linhaJogador * TELA
-        # Cria o bloco e adiciona no mapa e no grupo.
-        novo_bloco = Bloco(tipo, pos_x, pos_y)
-        mapa[linhaJogador][1].add(novo_bloco)
-        escadas_group.add(novo_bloco)
-        numeroEscadas -= 1
+    #Escadas
+    
+    numeroEscadas -= FazendoEscadas(numeroEscadas)
         
     numeroEscadas += Escadas_de_Volta()
         
-        
-        
-    
     # Fim Escadas
                 
     
