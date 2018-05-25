@@ -189,7 +189,7 @@ BLUE = (0, 0, 255)
 #RELOGIO   
 relogio = pygame.time.Clock()
 
-numeroEscadas = 10
+
 
 pygame.init()
 
@@ -224,45 +224,6 @@ minerador_group.add(minerador)
 
 mapa.criando()
 
-
-
-
-#for linha in range(ALTURA):
-#
-#    for coluna in range(LARGURA):
-#        tipo = - 1
-#        if linha <= 2:
-#            tipo = -1
-#        elif linha == 3 or linha == (ALTURA-1):
-#            tipo = Bloco.GRANITO
-#        elif coluna == 0 or coluna == (LARGURA-1):
-#            tipo = Bloco.GRANITO
-#        elif coluna == 1 and linha == posJogador:
-#            tipo = -1
-#        elif coluna == LARGURA-2 and linha == posBandeira:
-#            tipo = Bloco.BANDEIRA
-#        else:
-#            chance = random.randrange(0, 1000)
-#            if chance >= 0 and chance <=499:
-#                tipo = Bloco.TERRA
-#            elif chance >= 500 and chance <=849:
-#                tipo = Bloco.DINAMITE_VISIVEL
-#            elif chance >= 850 and chance <=959:
-#                tipo = Bloco.GRANITO
-#            elif chance >= 960 and chance <=989:
-#                tipo = Bloco.VIDA
-#            else:
-#                tipo = Bloco.DINAMITE_INVISIVEL
-#
-#        if tipo != -1:    
-#            # Calcula a posição.
-#            pos_x = coluna*TELA
-#            pos_y = linha*TELA
-#            
-#            # Cria o bloco e adiciona no mapa e no grupo.
-#            novo_bloco = Bloco(tipo, pos_x, pos_y)
-#            all_sprites.add(novo_bloco)
-#            blocos.add(novo_bloco)
     
 
 
