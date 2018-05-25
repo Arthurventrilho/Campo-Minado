@@ -3,27 +3,49 @@ import random
 from pygame.locals import *
                 
 
+"""Retirado de https://github.com/mchr3k/bounce-game/blob/master/bounce.py"""               
+def collide(bloco, player): 
+    if (bloco.rect.colliderect(player.rect)):
+        if ((player.velocidadex == 0) or
+            ((player.velocidadex > 0) and
+              (bloco.rect.left < player.lastrect.right)) or
+            ((player.velocidadex < 0) and
+              (player.lastrect.left < bloco.rect.right))):
+            # Player was previously above/below the platform
+            if (player.velocidadey > 0):
+                # Player is falling
+                player.rect.bottom = bloco.rect.top
+                player.onground = True
 
-def Colisao_Blocos():
+            else:
+                # Player is rising
+                player.rect.top = bloco.rect.bottom
+            player.velocidadey = 0
+        else:
+            # Player has hit an edge
+            if (player.velocidadex > 0):
+                # Player is moving right
+                player.rect.right = bloco.rect.left
+            else:
+                # Player is moving left
+                player.rect.left = bloco.rect.right
+            player.velocidadex = 0
+
+
+def Colisao_Blocos(mapa):
     
-    #Se o minerador bate nos blocos 
-    for bloco in pygame.sprite.spritecollide(minerador, mapa[linhaJogador-1][0], False):
-        bloco.life -= minerador.damage
-        minerador.colide()
-        if bloco.life <=0:
-            bloco.kill()
-    #Se o minerador bate nos blocos 
-    for bloco in pygame.sprite.spritecollide(minerador, mapa[linhaJogador][0], False):
-        bloco.life -= minerador.damage
-        minerador.colide()
-        if bloco.life <=0:
-            bloco.kill()
-    #Se o minerador bate nos blocos 
-    for bloco in pygame.sprite.spritecollide(minerador, mapa[linhaJogador+1][0], False):
-        bloco.life -= minerador.damage
-        minerador.colide()
-        if bloco.life <=0:
-            bloco.kill()
+    pressed_keys = pygame.key.get_pressed()
+    mapas = [mapa[linhaJogador-1][0], mapa[linhaJogador][0], mapa[linhaJogador+1][0]]
+    
+    for m in mapas:
+        #Se o minerador bate nos blocos 
+        for bloco in pygame.sprite.spritecollide(minerador, m, False):
+            collide(bloco, minerador)
+            if pressed_keys[K_SPACE]:
+                bloco.life -= minerador.damage
+                minerador.colide()
+                if bloco.life <=0:
+                    bloco.kill()
             
 
 def FazendoEscadas(numeroEscadas): 
@@ -91,32 +113,33 @@ class Minerador(pygame.sprite.Sprite):
         self.speed = sapatoSpeed
         self.stamina = stamina
         self.sleep = sono
+        self.lastrect = Rect(self.rect.left, self.rect.top, self.rect.width, self.rect.height)
 
     def move(self):
         pressed_keys = pygame.key.get_pressed()
-        movimento = self.speed
+
         if pressed_keys[K_LEFT] or (pressed_keys[K_LEFT] and pressed_keys[K_UP]):
             self.image = mineradorImagem.image2
-            mover_x = -movimento
-            mover_y = 0
+            self.velocidadex = -self.speed
+            self.velocidadey = 0
         elif pressed_keys[K_RIGHT] or (pressed_keys[K_RIGHT] and pressed_keys[K_UP]):
             self.image = mineradorImagem.image1
-            mover_x = +movimento
-            mover_y = 0
+            self.velocidadex = +self.speed
+            self.velocidadey = 0
         elif pressed_keys[K_DOWN]:
-            mover_x = 0
-            mover_y = +movimento
+            self.velocidadex = 0
+            self.velocidadey = +self.speed
         elif pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, mapa[linhaJogador - 1][1], False)\
             or pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, mapa[linhaJogador][1], False)\
             or pressed_keys[K_UP] and pygame.sprite.spritecollide(minerador, mapa[linhaJogador + 1][1], False):
-            mover_x = 0
-            mover_y = -movimento  
+            self.velocidadex = 0
+            self.velocidadey = -self.speed 
 
         else:
-            mover_x = 0
-            mover_y = 0
-        self.rect.x += mover_x
-        self.rect.y += mover_y
+            self.velocidadex = 0
+            self.velocidadey = 0
+        self.rect.x += self.velocidadex
+        self.rect.y += self.velocidadey
         
     def colide(self):
         pressed_keys = pygame.key.get_pressed()
@@ -394,8 +417,8 @@ while ESTADO != 0:
                     quit()
   
             #
-            linhaJogador = minerador.rect.y // TELA
-            colunaJogador = minerador.rect.x // TELA
+            linhaJogador = minerador.rect.center[1] // TELA
+            colunaJogador = minerador.rect.center[0] // TELA
             
             print(colunaJogador, linhaJogador)
             print(minerador.rect.x, minerador.rect.y)
@@ -406,7 +429,7 @@ while ESTADO != 0:
             print(mapa[linhaJogador][0], mapa[linhaJogador][1])
             print(numeroEscadas)
                     
-            Colisao_Blocos()
+            Colisao_Blocos(mapa)
             
             
             #Escadas

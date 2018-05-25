@@ -28,7 +28,6 @@ GRIDHEIGHT = HEIGHT / TILESIZE
 #player settings
 
 PLAYER_SPEED = 400
-PLAYER_ROT_SPEED = 250.0
 PLAYER_IMG = 'mineradorDcopy.png'
 
 
