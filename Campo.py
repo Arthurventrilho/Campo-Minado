@@ -3,8 +3,11 @@ import random
 import time
 from pygame.locals import *
 
-LARGURA = 800
-ALTURA = 600
+TAMANHO = 40
+LINHAS = 18
+COLUNAS = 35
+
+FPS = 30
  
 black = (0,0,0)
 white = (255,255,255)
@@ -32,7 +35,7 @@ def text_objects1(text, font):
 def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf',115)
     TextSurf, TextRect = text_objects(text, largeText)
-    TextRect.center = ((LARGURA/2),(ALTURA/2))
+    TextRect.center = ((tela.largurat/2),(tela.alturat/2))
     gameDisplay.blit(TextSurf, TextRect)
  
     pygame.display.update()
@@ -81,7 +84,7 @@ def game_intro():
 
         largeText = pygame.font.Font('freesansbold.ttf',105)
         TextSurf, TextRect = text_objects1("CAMPO MINADO", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/3))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/3))
         gameDisplay.blit(TextSurf, TextRect)
         
         button("JOGAR", 150,450,100,50, green, bright_green,"play")
@@ -106,17 +109,17 @@ def instrucao():
         gameDisplay.fill(white)
         largeText = pygame.font.Font('freesansbold.ttf',50)
         TextSurf, TextRect = text_objects("Sobre o jogo:", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/5))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/5))
         gameDisplay.blit(TextSurf, TextRect)
         largeText = pygame.font.Font('freesansbold.ttf',20)
         TextSurf1, TextRect = text_objects("Mine game consite em um jogo onde o objetivo é parmenecer", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/2.4))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
         gameDisplay.blit(TextSurf1, TextRect)
         TextSurf2, TextRect = text_objects("vivo pelo máximo de tempo possível, mas tome cuidado", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/2))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/2))
         gameDisplay.blit(TextSurf2, TextRect)
         TextSurf3, TextRect = text_objects("se sua estamia acabar será GAME OVER", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/1.7))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/1.7))
         gameDisplay.blit(TextSurf3, TextRect)
         
         button("Jogar", 350,450,100,50, green, bright_green,"Inst")
@@ -140,17 +143,17 @@ def configuration():
         gameDisplay.fill(white)
         largeText = pygame.font.Font('freesansbold.ttf',50)
         TextSurf, TextRect = text_objects("Comando:", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/5))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/5))
         gameDisplay.blit(TextSurf, TextRect)
         largeText = pygame.font.Font('freesansbold.ttf',20)
         TextSurf1, TextRect = text_objects("E - pega escada", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/2.4))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
         gameDisplay.blit(TextSurf1, TextRect)
         TextSurf2, TextRect = text_objects("L - entra na loja", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/2))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/2))
         gameDisplay.blit(TextSurf2, TextRect)
         TextSurf3, TextRect = text_objects("S - entrar na casa para dormir", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/1.7))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/1.7))
         gameDisplay.blit(TextSurf3, TextRect)
         
         button("Jogar", 350,450,100,50, green, bright_green,"bb")
@@ -175,7 +178,7 @@ def game_over():
 
         largeText = pygame.font.Font('freesansbold.ttf',115)
         TextSurf, TextRect = text_objects1("GAME OVER", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/3))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/3))
         gameDisplay.blit(TextSurf, TextRect)
         
         button("JOGAR", 150,450,100,50, green, bright_green,"play")
@@ -201,7 +204,7 @@ def sucess():
 
         largeText = pygame.font.Font('freesansbold.ttf',115)
         TextSurf, TextRect = text_objects1("PARABÉSN, VOCÊ GANHOU!", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/3))
+        TextRect.center = ((tela.largurat/2),(tela.alturat/3))
         gameDisplay.blit(TextSurf, TextRect)
         
         button("JOGAR", 150,450,100,50, green, bright_green,"play")
@@ -309,7 +312,7 @@ class Minerador(pygame.sprite.Sprite):
         
     def colisao_blocos(self, listaSprites):
     
-    
+        sucesso = False
         #Se o minerador bate nos blocos 
         for bloco in pygame.sprite.spritecollide(self, listaSprites, False):
             if bloco.tipo != 4:    
@@ -323,8 +326,8 @@ class Minerador(pygame.sprite.Sprite):
                 if bloco.tipo == 5:  
                     minerador.life += 1
                 if bloco.tipo == 3:  
-                    minerador.life += 100
-
+                    sucesso = True
+        return sucesso
         
     def colide(self):
         pressed_keys = pygame.key.get_pressed()
@@ -385,7 +388,7 @@ class Bloco(pygame.sprite.Sprite):
  
 pygame.init()
 
-tela = Tela(40, 17, 30)
+tela = Tela(TAMANHO, LINHAS, COLUNAS)
 
 gameDisplay = pygame.display.set_mode((tela.largurat, tela.alturat))
 pygame.display.set_caption('Campo Minado')
@@ -414,7 +417,8 @@ while ESTADO != ESTADO_TERMINA:
         while intro:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    ESTADO = ESTADO_TERMINA
+                    pygame.quit()
+                    quit()
     
             gameDisplay.blit(capa, (0,0))
     
@@ -432,10 +436,11 @@ while ESTADO != ESTADO_TERMINA:
                 
             if clicou_sair:
                 intro = False
-                ESTADO = ESTADO_TERMINA
+                pygame.quit()
+                quit()
                 
             pygame.display.update()
-            clock.tick(15)
+            clock.tick(FPS)
    
     #Instruções
     elif ESTADO == ESTADO_INSTRUCAO:
@@ -447,7 +452,8 @@ while ESTADO != ESTADO_TERMINA:
      
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    ESTADO = ESTADO_TERMINA
+                    pygame.quit()
+                    quit()
     
             gameDisplay.fill(white)
             largeText = pygame.font.Font('freesansbold.ttf',50)
@@ -474,7 +480,7 @@ while ESTADO != ESTADO_TERMINA:
                 ESTADO = ESTADO_COMANDO
             
             pygame.display.update()
-            clock.tick(60)
+            clock.tick(FPS)
     
     #Comando
     elif ESTADO == ESTADO_COMANDO:
@@ -484,7 +490,8 @@ while ESTADO != ESTADO_TERMINA:
      
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    ESTADO = ESTADO_TERMINA
+                    pygame.quit()
+                    quit()
      
     
             gameDisplay.fill(white)
@@ -510,14 +517,14 @@ while ESTADO != ESTADO_TERMINA:
                 ESTADO = ESTADO_PREPARO
             
             pygame.display.update()
-            clock.tick(80)  
+            clock.tick(FPS)  
             
     elif ESTADO == ESTADO_PREPARO:
         
 
         
         
-        tempo = clock.tick(30)
+        tempo = clock.tick(FPS)
         
         DISPLAYSURF = pygame.display.set_mode((tela.largurat, tela.alturat))
         
@@ -528,7 +535,7 @@ while ESTADO != ESTADO_TERMINA:
         posBandeira = random.randrange(4, tela.altura-2)
         # Cria minerador e adiciona em um grupo de Sprites.
         mineradorImagem = MineradorImagem("mineradorD.png", "mineradorE.png")
-        minerador = Minerador(mineradorImagem.image1 , 1, 1, 5, 1 * 40, posJogador * 40 )
+        minerador = Minerador(mineradorImagem.image1 , 100, 5, 1, 1 * 40, posJogador * 40 )
         minerador_group = pygame.sprite.Group()
         minerador_group.add(minerador)
         
@@ -542,7 +549,8 @@ while ESTADO != ESTADO_TERMINA:
         
         for event in pygame.event.get():
             if event.type == QUIT:
-                ESTADO = ESTADO_TERMINA
+                pygame.quit()
+                quit()
             
         if minerador.life <= 0:
             ESTADO = ESTADO_GAME_OVER
@@ -550,7 +558,9 @@ while ESTADO != ESTADO_TERMINA:
         # Move o minerador pela tela.
         minerador.move()
     
-        minerador.colisao_blocos(tela.blocos)
+        sucesso = minerador.colisao_blocos(tela.blocos)
+        if sucesso:
+            ESTADO = ESTADO_SUCESSO
     
         DISPLAYSURF.blit(fundo, (0, 3 * 40))    
     
@@ -562,9 +572,8 @@ while ESTADO != ESTADO_TERMINA:
         
     elif ESTADO == ESTADO_TERMINA:
         
-        for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
+        pygame.quit()
+        quit()
         
     elif ESTADO == ESTADO_GAME_OVER:
         
@@ -576,13 +585,14 @@ while ESTADO != ESTADO_TERMINA:
      
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    ESTADO = ESTADO_TERMINA
+                    pygame.quit()
+                    quit()
     
                 gameDisplay.blit(tela_morreu, (0,0))
         
                 largeText = pygame.font.Font('freesansbold.ttf',115)
                 TextSurf, TextRect = text_objects1("GAME OVER", largeText)
-                TextRect.center = ((LARGURA/2),(ALTURA/3))
+                TextRect.center = ((tela.largurat/2),(tela.alturat/3))
                 gameDisplay.blit(TextSurf, TextRect)
                 
                 clicou_jogar_novamente = button("JOGAR", 150,450,100,50, green, bright_green)
@@ -594,10 +604,11 @@ while ESTADO != ESTADO_TERMINA:
                     
                 if clicou_desistir:
                     ge = True
-                    ESTADO = ESTADO_TERMINA
+                    pygame.quit()
+                    quit()
                     
                 pygame.display.update()
-                clock.tick(15)
+                clock.tick(FPS)
           
         
     elif ESTADO == ESTADO_SUCESSO:
@@ -610,18 +621,19 @@ while ESTADO != ESTADO_TERMINA:
      
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    ESTADO = ESTADO_TERMINA
+                    pygame.quit()
+                    quit()
     
                 gameDisplay.blit(boa, (0,0))
         
                 largeText = pygame.font.Font('freesansbold.ttf',80)
                 TextSurf, TextRect = text_objects1("PARABENS,", largeText)
-                TextRect.center = ((LARGURA/2),(ALTURA/3))
+                TextRect.center = ((tela.largurat/2),(tela.alturat/3))
                 gameDisplay.blit(TextSurf, TextRect)
                 
                 largeText = pygame.font.Font('freesansbold.ttf',50)
                 TextSurf1, TextRect = text_objects1("VOCÊ GANHOU!!", largeText)
-                TextRect.center = ((LARGURA/2),(ALTURA/2.4))
+                TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
                 gameDisplay.blit(TextSurf1, TextRect)
                 
                 clicou_sucesso = button("JOGAR", 150,450,100,50, green, bright_green)
@@ -633,10 +645,11 @@ while ESTADO != ESTADO_TERMINA:
                     
                 if clicou_quit:
                     GE = True
-                    ESTADO = ESTADO_TERMINA
+                    pygame.quit()
+                    quit()
                     
                 pygame.display.update()
-                clock.tick(15)
+                clock.tick(FPS)
   
         
     
