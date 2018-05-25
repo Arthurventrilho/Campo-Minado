@@ -26,7 +26,7 @@ def text_objects(text, font):
     return textSurface, textSurface.get_rect()
 
 def text_objects1(text, font):
-    textSurface1 = font.render(text, True, red)
+    textSurface1 = font.render(text, True, pink)
     return textSurface1, textSurface1.get_rect()
  
 def message_display(text):
@@ -324,7 +324,7 @@ while ESTADO != ESTADO_TERMINA:
             TextRect.center = ((LARGURA/2),(ALTURA/2.4))
             gameDisplay.blit(TextSurf1, TextRect)
             
-            TextSurf2, TextRect = text_objects("TEM SORTE OU NÃO", largeText)
+            TextSurf2, TextRect = text_objects("TEM SORTE OU NÃO!", largeText)
             TextRect.center = ((LARGURA/2),(ALTURA/2))
             gameDisplay.blit(TextSurf2, TextRect)
             
@@ -333,7 +333,7 @@ while ESTADO != ESTADO_TERMINA:
             if vai_para_jogo:
                 GameExit = True
                 print('')
-                ESTADO = ESTADO_GAME_OVER
+                ESTADO = ESTADO_SUCESSO
             
             pygame.display.update()
             clock.tick(80)  
@@ -364,27 +364,27 @@ while ESTADO != ESTADO_TERMINA:
                 if event.type == pygame.QUIT:
                     ESTADO = ESTADO_TERMINA
     
-        gameDisplay.blit(tela_morreu, (0,0))
-
-        largeText = pygame.font.Font('freesansbold.ttf',115)
-        TextSurf, TextRect = text_objects1("GAME OVER", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/3))
-        gameDisplay.blit(TextSurf, TextRect)
+                gameDisplay.blit(tela_morreu, (0,0))
         
-        clicou_jogar_novamente = button("JOGAR", 150,450,100,50, green, bright_green)
-        clicou_desistir = button("SAIR", 550,450,100,50, red, bright_red)
-        
-        if clicou_jogar_novamente:
-            ge = True
-            ESTADO = ESTADO_PREPARO
-            
-        if clicou_desistir:
-            ge = True
-            ESTADO = ESTADO_TERMINA
-            
-        pygame.display.update()
-        clock.tick(15)
-  
+                largeText = pygame.font.Font('freesansbold.ttf',115)
+                TextSurf, TextRect = text_objects1("GAME OVER", largeText)
+                TextRect.center = ((LARGURA/2),(ALTURA/3))
+                gameDisplay.blit(TextSurf, TextRect)
+                
+                clicou_jogar_novamente = button("JOGAR", 150,450,100,50, green, bright_green)
+                clicou_desistir = button("SAIR", 550,450,100,50, red, bright_red)
+                
+                if clicou_jogar_novamente:
+                    ge = True
+                    ESTADO = ESTADO_PREPARO
+                    
+                if clicou_desistir:
+                    ge = True
+                    ESTADO = ESTADO_TERMINA
+                    
+                pygame.display.update()
+                clock.tick(15)
+          
         
     elif ESTADO == ESTADO_SUCESSO:
         
@@ -398,26 +398,31 @@ while ESTADO != ESTADO_TERMINA:
                 if event.type == pygame.QUIT:
                     ESTADO = ESTADO_TERMINA
     
-        gameDisplay.blit(boa, (0,0))
-
-        largeText = pygame.font.Font('freesansbold.ttf',115)
-        TextSurf, TextRect = text_objects1("PARABENS, VOCÉ GANHOU!", largeText)
-        TextRect.center = ((LARGURA/2),(ALTURA/3))
-        gameDisplay.blit(TextSurf, TextRect)
+                gameDisplay.blit(boa, (0,0))
         
-        clicou_sucesso = button("JOGAR", 150,450,100,50, green, bright_green)
-        clicou_quit = button("SAIR", 550,450,100,50, red, bright_red)
-        
-        if clicou_sucesso:
-            GE = True
-            ESTADO = ESTADO_PREPARO
-            
-        if clicou_quit:
-            GE = True
-            ESTADO = ESTADO_TERMINA
-            
-        pygame.display.update()
-        clock.tick(15)
+                largeText = pygame.font.Font('freesansbold.ttf',80)
+                TextSurf, TextRect = text_objects1("PARABENS,", largeText)
+                TextRect.center = ((LARGURA/2),(ALTURA/3))
+                gameDisplay.blit(TextSurf, TextRect)
+                
+                largeText = pygame.font.Font('freesansbold.ttf',50)
+                TextSurf1, TextRect = text_objects1("VOCÊ GANHOU!!", largeText)
+                TextRect.center = ((LARGURA/2),(ALTURA/2.4))
+                gameDisplay.blit(TextSurf1, TextRect)
+                
+                clicou_sucesso = button("JOGAR", 150,450,100,50, green, bright_green)
+                clicou_quit = button("SAIR", 550,450,100,50, red, bright_red)
+                
+                if clicou_sucesso:
+                    GE = True
+                    ESTADO = ESTADO_PREPARO
+                    
+                if clicou_quit:
+                    GE = True
+                    ESTADO = ESTADO_TERMINA
+                    
+                pygame.display.update()
+                clock.tick(15)
   
         
     
