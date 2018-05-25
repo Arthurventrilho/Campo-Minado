@@ -33,18 +33,18 @@ def collide(bloco, player):
 
 def Colisao_Blocos(mapa):
     
-    pressed_keys = pygame.key.get_pressed()
+
     mapas = [mapa[linhaJogador-1][0], mapa[linhaJogador][0], mapa[linhaJogador+1][0]]
     
     for m in mapas:
         #Se o minerador bate nos blocos 
         for bloco in pygame.sprite.spritecollide(minerador, m, False):
             collide(bloco, minerador)
-            if pressed_keys[K_SPACE]:
-                bloco.life -= minerador.damage
-                minerador.colide()
-                if bloco.life <=0:
-                    bloco.kill()
+
+            bloco.life -= minerador.damage
+            minerador.colide()
+            if bloco.life <=0:
+                bloco.kill()
 
             
 

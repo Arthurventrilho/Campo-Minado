@@ -32,20 +32,26 @@ def collide(bloco, player):
             player.velocidadex = 0
 
 
-def Colisao_Blocos(mapa):
+def Colisao_Blocos(mapa, linhaJogador):
     
-    pressed_keys = pygame.key.get_pressed()
-    mapas = [mapa[linhaJogador-1][0], mapa[linhaJogador][0], mapa[linhaJogador+1][0]]
+    if linhaJogador <= 12:
+        print(1)
+        mapas = [mapa[linhaJogador-1][0], mapa[linhaJogador][0], mapa[linhaJogador+1][0]]
+    else:
+        print(2)
+        mapas = [mapa[linhaJogador-1][0], mapa[linhaJogador][0]]
     
     for m in mapas:
         #Se o minerador bate nos blocos 
         for bloco in pygame.sprite.spritecollide(minerador, m, False):
             collide(bloco, minerador)
-            if pressed_keys[K_SPACE]:
-                bloco.life -= minerador.damage
-                minerador.colide()
-                if bloco.life <=0:
-                    bloco.kill()
+
+            bloco.life -= minerador.damage
+            minerador.colide()
+            if bloco.life <=0:
+                bloco.kill()
+
+                    
             
 
 def FazendoEscadas(numeroEscadas): 
@@ -95,6 +101,181 @@ def Escadas_de_Volta():
             
     return contador
 # ===============      CLASSES      ===============
+class Mapa():   
+    def __init__(self, tamanhoBloco, altura, largura):
+        self.tbloco = tamanhoBloco
+        self.largura = largura
+        self.altura = altura
+        self.alturat = tamanhoBloco * altura
+        self.largurat = tamanhoBloco * largura
+        
+    def criando(self):
+        
+        minerador_group = pygame.sprite.Group()
+        blocos_group = pygame.sprite.Group()
+        escadas_group = pygame.sprite.Group()        
+        mapa = []
+        
+        for linha in range(self.altura):
+            blocos_linha = pygame.sprite.Group()
+            escadas_linha = pygame.sprite.Group()
+            linha_sprites = []
+            if linha > 5 and linha <= 10:
+                for coluna in range(self.largura):
+                    if coluna == int(self.largura / 2):
+                        tipo = Bloco.ESCADA
+                    else:
+                        # Criando um novo bloco:
+                        
+                        # Escolhe um tipo.
+                        tipo = Bloco.TERRA
+                
+                    # Calcula a posição.
+                    pos_x = coluna * self.tbloco
+                    pos_y = linha * self.tbloco
+                    
+                    # Cria o bloco e adiciona no mapa e no grupo.
+                    novo_bloco = Bloco(tipo, pos_x, pos_y)
+        
+                    if novo_bloco.tipo == 6:
+                        escadas_group.add(novo_bloco)
+                        escadas_linha.add(novo_bloco)
+                    else:
+                        blocos_group.add(novo_bloco)
+                        blocos_linha.add(novo_bloco)
+                        
+            if linha > 10 and linha <= 200:
+                for coluna in range(self.largura):
+                    
+                    randomNumber = random.randint(0, 1000)
+                    
+                    # Criando um novo bloco:
+                    # Escolhe um tipo.
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.TERRA
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.FERRO
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.COBRE
+                
+                    # Calcula a posição.
+                    pos_x = coluna * self.tbloco
+                    pos_y = linha * self.tbloco
+                    
+                    # Cria o bloco e adiciona no mapa e no grupo.
+                    novo_bloco = Bloco(tipo, pos_x, pos_y)
+             
+                    blocos_group.add(novo_bloco)
+                    blocos_linha.add(novo_bloco)
+            
+            if linha > 200 and linha <= 350:
+                for coluna in range(self.largura):
+                    
+                    randomNumber = random.randint(0, 1000)
+                    
+                    # Criando um novo bloco:
+                    # Escolhe um tipo.
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.TERRA
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.FERRO
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.COBRE
+                
+                    # Calcula a posição.
+                    pos_x = coluna * self.tbloco
+                    pos_y = linha * self.tbloco
+                    
+                    # Cria o bloco e adiciona no mapa e no grupo.
+                    novo_bloco = Bloco(tipo, pos_x, pos_y)
+             
+                    blocos_group.add(novo_bloco)
+                    blocos_linha.add(novo_bloco)
+                    
+            if linha > 350 and linha <= 600:
+                for coluna in range(self.largura):
+                    
+                    randomNumber = random.randint(0, 1000)
+                    
+                    # Criando um novo bloco:
+                    # Escolhe um tipo.
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.TERRA
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.FERRO
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.COBRE
+                
+                    # Calcula a posição.
+                    pos_x = coluna * self.tbloco
+                    pos_y = linha * self.tbloco
+                    
+                    # Cria o bloco e adiciona no mapa e no grupo.
+                    novo_bloco = Bloco(tipo, pos_x, pos_y)
+             
+                    blocos_group.add(novo_bloco)
+                    blocos_linha.add(novo_bloco)
+                    
+            if linha > 600 and linha <= 850:
+                for coluna in range(self.largura):
+                    
+                    randomNumber = random.randint(0, 1000)
+                    
+                    # Criando um novo bloco:
+                    # Escolhe um tipo.
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.TERRA
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.FERRO
+                    if randomNumber >= 0 and randomNumber <=1000:
+                        tipo = Bloco.COBRE
+                
+                    # Calcula a posição.
+                    pos_x = coluna * self.tbloco
+                    pos_y = linha * self.tbloco
+                    
+                    # Cria o bloco e adiciona no mapa e no grupo.
+                    novo_bloco = Bloco(tipo, pos_x, pos_y)
+             
+                    blocos_group.add(novo_bloco)
+                    blocos_linha.add(novo_bloco)
+                    
+            linha_sprites.append(blocos_linha)
+            linha_sprites.append(escadas_linha)
+            mapa.append(linha_sprites)
+            
+
+        
+        self.mapa = mapa
+        self.escadas = escadas_group
+        self.blocos = blocos_group    
+
+class Inventario():
+    def __init__(self, tamanho, numeroFerro, numeroCobre, numeroOuro, numeroRubi, numeroDiamante, numeroEscadas):
+        self.tamanho = tamanho
+        self.ferro = numeroFerro
+        self.cobre = numeroCobre
+        self.ouro = numeroOuro
+        self.rubi = numeroRubi
+        self.diamante = numeroDiamante
+        self.inventario = self.ferro + self.cobre + self.ouro + self.rubi + self.diamante
+        self.escadas = numeroEscadas
+        
+    def adiciona(self, tipo):
+        if self.inventario < self.tamanho:
+            if tipo == Bloco.FERRO:
+                self.ferro += 1
+            elif tipo == Bloco.COBRE:
+                self.cobre += 1
+            elif tipo == Bloco.OURO:
+                self.ouro += 1
+            elif tipo == Bloco.RUBI:
+                self.rubi += 1
+            elif tipo == Bloco.DIAMANTE:
+                self.diamante += 1
+                
+        self.inventario = self.ferro + self.cobre + self.ouro + self.rubi + self.diamante      
+
 class MineradorImagem():
     def __init__(self, image1, image2):
         self.image1 = pygame.image.load(image1)
@@ -417,19 +598,21 @@ while ESTADO != 0:
                     quit()
   
             #
-            linhaJogador = minerador.rect.center[1] // TELA
-            colunaJogador = minerador.rect.center[0] // TELA
             
-            print(colunaJogador, linhaJogador)
-            print(minerador.rect.x, minerador.rect.y)
+            
+#            print(colunaJogador, linhaJogador)
+#            print(minerador.rect.x, minerador.rect.y)
                     
             # Move o minerador pela tela.
             minerador.move()
             
-            print(mapa[linhaJogador][0], mapa[linhaJogador][1])
-            print(numeroEscadas)
+            linhaJogador = minerador.rect.center[1] // TELA
+            colunaJogador = minerador.rect.center[0] // TELA
+            
+#            print(mapa[linhaJogador][0], mapa[linhaJogador][1])
+#            print(numeroEscadas)
                     
-            Colisao_Blocos(mapa)
+            Colisao_Blocos(mapa, linhaJogador)
             
             
             #Escadas
