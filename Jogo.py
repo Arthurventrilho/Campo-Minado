@@ -4,32 +4,32 @@ from pygame.locals import *
                 
 
 """Retirado de https://github.com/mchr3k/bounce-game/blob/master/bounce.py"""               
-def collide(bloco, player): 
-    if (bloco.rect.colliderect(player.rect)):
-        if ((player.velocidadex == 0) or
-            ((player.velocidadex > 0) and
+def collide(self, bloco): 
+    if (bloco.rect.colliderect(self.rect)):
+        if ((self.velocidadex == 0) or
+            ((self.velocidadex > 0) and
               (bloco.rect.left < player.lastrect.right)) or
-            ((player.velocidadex < 0) and
-              (player.lastrect.left < bloco.rect.right))):
+            ((self.velocidadex < 0) and
+              (self.lastrect.left < bloco.rect.right))):
             # Player was previously above/below the platform
-            if (player.velocidadey > 0):
+            if (self.velocidadey > 0):
                 # Player is falling
-                player.rect.bottom = bloco.rect.top
-                player.onground = True
+                self.rect.bottom = bloco.rect.top
+                self.onground = True
 
             else:
                 # Player is rising
-                player.rect.top = bloco.rect.bottom
-            player.velocidadey = 0
+                self.rect.top = bloco.rect.bottom
+            self.velocidadey = 0
         else:
             # Player has hit an edge
-            if (player.velocidadex > 0):
+            if (self.velocidadex > 0):
                 # Player is moving right
-                player.rect.right = bloco.rect.left
+                self.rect.right = bloco.rect.left
             else:
                 # Player is moving left
-                player.rect.left = bloco.rect.right
-            player.velocidadex = 0
+                self.rect.left = bloco.rect.right
+            self.velocidadex = 0
 
 
 def Colisao_Blocos(mapa, linhaJogador):
