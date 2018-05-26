@@ -480,13 +480,13 @@ while ESTADO != ESTADO_TERMINA:
     
             gameDisplay.blit(capa, (0,0))
     
-            largeText = pygame.font.Font('freesansbold.ttf',95)
-            TextSurf, TextRect = text_objects1("CAMPO MINADO", largeText)
+            largeText = pygame.font.Font('freesansbold.ttf',110)
+            TextSurf, TextRect = text_objects1("CAMPO MINADO", largeText,)
             TextRect.center = ((tela.largurat/2),(tela.alturat/3))
             gameDisplay.blit(TextSurf, TextRect)
             
-            clicou_jogar = button("JOGAR", 150,450,100,50, green, bright_green)
-            clicou_sair = button("SAIR", 550,450,100,50, red, bright_red)
+            clicou_jogar = button("COMEÇAR", 450,450,150,75, green, bright_green)
+            clicou_sair = button("SAIR", 850,450,150,75, red, bright_red)
             
             if clicou_jogar:
                 intro = False
@@ -520,19 +520,19 @@ while ESTADO != ESTADO_TERMINA:
             gameDisplay.blit(TextSurf, TextRect)
             
             largeText = pygame.font.Font('freesansbold.ttf',20)
-            TextSurf1, TextRect = text_objects("Mine game consite em um jogo onde o objetivo é parmenecer", largeText)
+            TextSurf1, TextRect = text_objects("CAMPO MINADO é um jogo onde o objetivo é atravesar o mapa", largeText)
             TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
             gameDisplay.blit(TextSurf1, TextRect)
             
-            TextSurf2, TextRect = text_objects("vivo pelo máximo de tempo possível, mas tome cuidado", largeText)
+            TextSurf2, TextRect = text_objects("sem morrer, mas tome cuidado, o caminho ate la é perigoso,  ", largeText)
             TextRect.center = ((tela.largurat/2),(tela.alturat/2))
             gameDisplay.blit(TextSurf2, TextRect)
             
-            TextSurf3, TextRect = text_objects("se sua estamia acabar será GAME OVER", largeText)
+            TextSurf3, TextRect = text_objects("basta um passo em falso e sera GAME OVER ", largeText)
             TextRect.center = ((tela.largurat/2),(tela.alturat/1.7))
             gameDisplay.blit(TextSurf3, TextRect)
             
-            vai_para_configuration = button("Jogar", 350,450,100,50, green, bright_green)
+            vai_para_configuration = button("PROXIMO", 625,500,150,75, green, bright_green)
             if vai_para_configuration:
                 gameExit = True
                 ESTADO = ESTADO_COMANDO
@@ -551,24 +551,26 @@ while ESTADO != ESTADO_TERMINA:
                     pygame.quit()
                     quit()
      
-    
-            gameDisplay.fill(white)
+            
+            fotoComando = pygame.image.load("fotoComando.png")
+            
+            gameDisplay.blit(fotoComando, (0,0))
             largeText = pygame.font.Font('freesansbold.ttf',80)
-            TextSurf, TextRect = text_objects("TUDO PRONTO!", largeText)
-            TextRect.center = ((tela.largurat/2),(tela.alturat/5))
+            TextSurf, TextRect = text_objects1("TUDO PRONTO!", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/4.5))
             gameDisplay.blit(TextSurf, TextRect)
             
             largeText = pygame.font.Font('freesansbold.ttf',50)
-            TextSurf1, TextRect = text_objects("VAMOS VER SE VOCÊ", largeText)
-            TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
+            TextSurf1, TextRect = text_objects1("QUE A SORTE  ", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/2.2))
             gameDisplay.blit(TextSurf1, TextRect)
             
-            TextSurf2, TextRect = text_objects("TEM SORTE OU NÃO!", largeText)
-            TextRect.center = ((tela.largurat/2),(tela.alturat/2))
+            TextSurf2, TextRect = text_objects1("ESTEJA COM VOCE", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/1.8))
             gameDisplay.blit(TextSurf2, TextRect)
             
 
-            vai_para_jogo = button("Jogar", 350,380,100,50, green, bright_green)            
+            vai_para_jogo = button("JOGAR", 625,550,150,75, green, bright_green)            
             if vai_para_jogo:
                 GameExit = True
                 print('')
@@ -662,8 +664,8 @@ while ESTADO != ESTADO_TERMINA:
                 TextRect.center = ((tela.largurat/2),(tela.alturat/3))
                 gameDisplay.blit(TextSurf, TextRect)
                 
-                clicou_jogar_novamente = button("JOGAR", 150,450,100,50, green, bright_green)
-                clicou_desistir = button("SAIR", 550,450,100,50, red, bright_red)
+                clicou_jogar_novamente = button("RECOMEÇAR", 450,450,150,75, green, bright_green)
+                clicou_desistir = button("SAIR", 850,450,150,75, red, bright_red)
                 
                 if clicou_jogar_novamente:
                     ge = True
