@@ -15,7 +15,9 @@ red = (200,0,0)
 green = (0,200,0)
 pink = (255,0,255)
 brown = (139,69,19)
+yellow = (200, 200, 0)
 
+bright_yellow = (255, 255, 0)
 bright_red = (255,0,0)
 bright_green = (0, 255, 0)
 block_color = (53,115,255)
@@ -491,7 +493,7 @@ while ESTADO != ESTADO_TERMINA:
             gameDisplay.blit(TextSurf, TextRect)
             
             clicou_jogar = button("COMEÇAR", 450,450,150,75, green, bright_green)
-            clicou_sair = button("TUTORIAL", 850,450,150,75, red, bright_red)
+            clicou_sair = button("TUTORIAL", 850,450,150,75, yellow, bright_yellow)
             
             if clicou_jogar:
                 intro = False
