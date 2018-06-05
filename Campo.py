@@ -491,16 +491,15 @@ while ESTADO != ESTADO_TERMINA:
             gameDisplay.blit(TextSurf, TextRect)
             
             clicou_jogar = button("COMEÇAR", 450,450,150,75, green, bright_green)
-            clicou_sair = button("SAIR", 850,450,150,75, red, bright_red)
+            clicou_sair = button("TUTORIAL", 850,450,150,75, red, bright_red)
             
             if clicou_jogar:
                 intro = False
-                ESTADO = ESTADO_INSTRUCAO
+                ESTADO = ESTADO_PREPARO
                 
             if clicou_sair:
                 intro = False
-                pygame.quit()
-                quit()
+                ESTADO = ESTADO_INSTRUCAO
                 
             pygame.display.update()
             clock.tick(FPS)
