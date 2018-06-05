@@ -3,11 +3,7 @@ import random
 import time
 from pygame.locals import *
 
-TAMANHO = 40
-LINHAS = 18
-COLUNAS = 35
 
-FPS = 30
  
 black = (0,0,0)
 white = (255,255,255)
@@ -19,6 +15,38 @@ brown = (139,69,19)
 bright_red = (255,0,0)
 bright_green = (0, 255, 0)
 block_color = (53,115,255)
+
+#Momentos do Jogo 
+ESTADO_CAPA = 0
+ESTADO_INSTRUCAO = 1
+ESTADO_COMANDO = 2
+ESTADO_PREPARO = 3
+ESTADO_JOGO = 4
+ESTADO_TERMINA = 5
+ESTADO_GAME_OVER = 6
+ESTADO_SUCESSO = 7
+
+#TIPOS DE BLOCO
+TERRA = 0
+DINAMITE_VISIVEL = 1
+DINAMITE_INVISIVEL = 2
+BANDEIRA = 3
+GRANITO = 4
+VIDA =5
+
+#PARAMS DO MINERADOR
+DANO = 1
+SAUDE = 100
+VELOCIDADE = 5
+
+#tamnho da tile
+TAMANHO = 40
+#numero de linhas
+LINHAS = 18
+#numero de colunas
+COLUNAS = 35
+
+FPS = 30
  
  
 def things(thingx, thingy, thingw, thingh, color):
@@ -227,6 +255,12 @@ class Tela():
         
     def criando(self):
         all_sprites = pygame.sprite.Group()
+        posJogador = random.randrange(4, self.altura-2)
+        posBandeira = random.randrange(4, self.altura-2)
+        # Cria minerador e adiciona em um grupo de Sprites.
+        minerador = Minerador( 1 * 40, posJogador * 40 )
+        minerador_group = pygame.sprite.Group()
+        minerador_group.add(minerador)
         all_sprites.add(minerador)
         blocos = pygame.sprite.Group()
         for linha in range(self.altura):
@@ -239,13 +273,13 @@ class Tela():
                     tipo = Bloco.GRANITO
                 elif coluna == 1 and linha == posJogador:
                     tipo = -1
-                elif coluna == tela.largura-2 and linha == posBandeira:
+                elif coluna == self.largura-2 and linha == posBandeira:
                     tipo = Bloco.BANDEIRA
                 else:
                     chance = random.randrange(0, 1000)
-                    if chance >= 0 and chance <=699:
+                    if chance >= 0 and chance <=499:
                         tipo = Bloco.TERRA
-                    elif chance >= 700 and chance <=849:
+                    elif chance >= 500 and chance <=849:
                         tipo = Bloco.DINAMITE_VISIVEL
                     elif chance >= 850 and chance <=959:
                         tipo = Bloco.GRANITO
@@ -264,6 +298,7 @@ class Tela():
                     all_sprites.add(novo_bloco)
                     blocos.add(novo_bloco)
                     
+        self.minerador = minerador
         self.all =  all_sprites
         self.blocos = blocos
 
@@ -280,7 +315,7 @@ class MineradorParams():
 
 class Minerador(pygame.sprite.Sprite):
     
-    params = MineradorParams("mineradorD.png", "mineradorE.png", "pica1.png", "pica1.png", 1, 5, 1)
+    params = MineradorParams("mineradorD.png", "mineradorE.png", "pica1.png", "pica1.png", DANO, VELOCIDADE, SAUDE)
     
     
     def __init__(self, pos_x, pos_y):
@@ -375,28 +410,23 @@ class Minerador(pygame.sprite.Sprite):
 
     
             #blocos de graniso sao indestrutiveis
-            if bloco.tipo != 4:    
+            if bloco.tipo != GRANITO:    
                 bloco.life -= self.damage
             
             #se os blocos forem destruidos
             if bloco.life <=0:
                 bloco.kill()
-
-                if bloco.tipo == 1 or bloco.tipo == 2:  
-                    minerador.life -= 0
-
                 #TNT
-                if bloco.tipo == 1:  
+                if bloco.tipo == DINAMITE_VISIVEL:  
                     self.life -= 1
                 #TNT escondida - morte
-                if bloco.tipo == 2:  
+                if bloco.tipo == DINAMITE_INVISIVEL:  
                     self.life = 0
                 #pega vida
-
-                if bloco.tipo == 5:  
+                if bloco.tipo == VIDA:  
                     self.life += 1
                 #ganha
-                if bloco.tipo == 3:  
+                if bloco.tipo == BANDEIRA:  
                     self.win = True
                     
     def animacao(self):
@@ -410,9 +440,23 @@ class Minerador(pygame.sprite.Sprite):
         elif self.lastimage == Minerador.params.esquerda:
             self.image = Minerador.params.animE
 
-                    
 
-
+    def update(self):
+        volta = ESTADO_JOGO
+        if tela.minerador.life <= 0:
+            volta = ESTADO_GAME_OVER
+     
+        # Move o minerador pela tela.
+        
+        
+        if self.image == Minerador.params.direita or self.image == Minerador.params.esquerda:
+            self.lastimage = self.image
+            
+        if self.image == Minerador.params.animD or self.image == Minerador.params.animE:
+            self.image = self.lastimage
+            
+        return volta
+            
 class BlocoParams:
     def __init__(self, image, vida):
         self.image = image
@@ -420,21 +464,21 @@ class BlocoParams:
 
 class Bloco(pygame.sprite.Sprite):
     
-    TERRA = 0
-    DINAMITE_VISIVEL = 1
-    DINAMITE_INVISIVEL = 2
-    BANDEIRA = 3
-    GRANITO = 4
-    VIDA =5
+    TERRA = TERRA
+    DINAMITE_VISIVEL = DINAMITE_VISIVEL
+    DINAMITE_INVISIVEL = DINAMITE_INVISIVEL
+    BANDEIRA = BANDEIRA
+    GRANITO = GRANITO
+    VIDA = VIDA
 
     
     tipos = {
         TERRA: BlocoParams(pygame.image.load("terra.png"), 3),
-        DINAMITE_VISIVEL: BlocoParams(pygame.image.load("TNT.png"), 1),
+        DINAMITE_VISIVEL: BlocoParams(pygame.image.load("ferro.png"), 1),
         DINAMITE_INVISIVEL: BlocoParams(pygame.image.load("terra.png"), 1),
         BANDEIRA: BlocoParams(pygame.image.load("escada1.png"), 1),
         GRANITO: BlocoParams(pygame.image.load("diamante.png"), 1),
-        VIDA: BlocoParams(pygame.image.load("Heart_0.png"), 1)
+        VIDA: BlocoParams(pygame.image.load("ruby.png"), 1)
 
     }
         
@@ -457,15 +501,7 @@ gameDisplay = pygame.display.set_mode((tela.largurat, tela.alturat))
 pygame.display.set_caption('Campo Minado')
 clock = pygame.time.Clock()       
         
-#Momentos do Jogo 
-ESTADO_CAPA = 0
-ESTADO_INSTRUCAO = 1
-ESTADO_COMANDO = 2
-ESTADO_PREPARO = 3
-ESTADO_JOGO = 4
-ESTADO_TERMINA = 5
-ESTADO_GAME_OVER = 6
-ESTADO_SUCESSO = 7
+
         
 ESTADO = ESTADO_CAPA
 while ESTADO != ESTADO_TERMINA:
@@ -491,15 +527,16 @@ while ESTADO != ESTADO_TERMINA:
             gameDisplay.blit(TextSurf, TextRect)
             
             clicou_jogar = button("COMEÇAR", 450,450,150,75, green, bright_green)
-            clicou_sair = button("TUTORIAL", 850,450,150,75, red, bright_red)
+            clicou_sair = button("SAIR", 850,450,150,75, red, bright_red)
             
             if clicou_jogar:
                 intro = False
-                ESTADO = ESTADO_PREPARO
+                ESTADO = ESTADO_INSTRUCAO
                 
             if clicou_sair:
                 intro = False
-                ESTADO = ESTADO_INSTRUCAO
+                pygame.quit()
+                quit()
                 
             pygame.display.update()
             clock.tick(FPS)
@@ -596,17 +633,10 @@ while ESTADO != ESTADO_TERMINA:
         fundo.fill(brown)
         
  
-        posJogador = random.randrange(4, tela.altura-2)
-        posBandeira = random.randrange(4, tela.altura-2)
-        # Cria minerador e adiciona em um grupo de Sprites.
-        minerador = Minerador( 1 * 40, posJogador * 40 )
-        minerador_group = pygame.sprite.Group()
-        minerador_group.add(minerador)
+
         
         # Criando os blocos de minerio.       
         tela.criando()
-        
-
         
         ESTADO = ESTADO_JOGO
 
@@ -617,32 +647,18 @@ while ESTADO != ESTADO_TERMINA:
             if event.type == QUIT:
                 pygame.quit()
                 quit()
-            
-        if minerador.life <= 0:
-            ESTADO = ESTADO_GAME_OVER
-     
-        # Move o minerador pela tela.
-        
-        
-        if minerador.image == Minerador.params.direita or minerador.image == Minerador.params.esquerda:
-            minerador.lastimage = minerador.image
-            
-        if minerador.image == Minerador.params.animD or minerador.image == Minerador.params.animE:
-            minerador.image = minerador.lastimage
-            
-        minerador.move()
+
+        ESTADO = tela.minerador.update()    
+        tela.minerador.move()
     
-        minerador.colisao_blocos(tela.blocos)
-        
-        if minerador.win:
+        tela.minerador.colisao_blocos(tela.blocos)
+        if tela.minerador.win:
             ESTADO = ESTADO_SUCESSO
     
         DISPLAYSURF.blit(fundo, (0, 0))    
     
         tela.all.draw(DISPLAYSURF) 
-        print(clock.get_fps())
         
-
         pygame.display.update()
 
         
@@ -712,8 +728,8 @@ while ESTADO != ESTADO_TERMINA:
                 TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
                 gameDisplay.blit(TextSurf1, TextRect)
                 
-                clicou_sucesso = button("RECOMECAR", 450,450,150,75, green, bright_green)
-                clicou_quit = button("SAIR", 850,450,150,75, red, bright_red)
+                clicou_sucesso = button("JOGAR", 150,450,100,50, green, bright_green)
+                clicou_quit = button("SAIR", 550,450,100,50, red, bright_red)
                 
                 if clicou_sucesso:
                     GE = True
@@ -728,4 +744,7 @@ while ESTADO != ESTADO_TERMINA:
                 clock.tick(FPS)
   
         
+    
+
+
 
