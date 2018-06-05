@@ -243,9 +243,9 @@ class Tela():
                     tipo = Bloco.BANDEIRA
                 else:
                     chance = random.randrange(0, 1000)
-                    if chance >= 0 and chance <=499:
+                    if chance >= 0 and chance <=699:
                         tipo = Bloco.TERRA
-                    elif chance >= 500 and chance <=849:
+                    elif chance >= 700 and chance <=849:
                         tipo = Bloco.DINAMITE_VISIVEL
                     elif chance >= 850 and chance <=959:
                         tipo = Bloco.GRANITO
@@ -280,7 +280,7 @@ class MineradorParams():
 
 class Minerador(pygame.sprite.Sprite):
     
-    params = MineradorParams("mineradorD.png", "mineradorE.png", "pica1.png", "pica1.png", 1, 5, 100)
+    params = MineradorParams("mineradorD.png", "mineradorE.png", "pica1.png", "pica1.png", 1, 5, 1)
     
     
     def __init__(self, pos_x, pos_y):
@@ -381,6 +381,10 @@ class Minerador(pygame.sprite.Sprite):
             #se os blocos forem destruidos
             if bloco.life <=0:
                 bloco.kill()
+
+                if bloco.tipo == 1 or bloco.tipo == 2:  
+                    minerador.life -= 0
+
                 #TNT
                 if bloco.tipo == 1:  
                     self.life -= 1
@@ -388,6 +392,7 @@ class Minerador(pygame.sprite.Sprite):
                 if bloco.tipo == 2:  
                     self.life = 0
                 #pega vida
+
                 if bloco.tipo == 5:  
                     self.life += 1
                 #ganha
@@ -425,11 +430,11 @@ class Bloco(pygame.sprite.Sprite):
     
     tipos = {
         TERRA: BlocoParams(pygame.image.load("terra.png"), 3),
-        DINAMITE_VISIVEL: BlocoParams(pygame.image.load("ferro.png"), 1),
+        DINAMITE_VISIVEL: BlocoParams(pygame.image.load("TNT.png"), 1),
         DINAMITE_INVISIVEL: BlocoParams(pygame.image.load("terra.png"), 1),
         BANDEIRA: BlocoParams(pygame.image.load("escada1.png"), 1),
         GRANITO: BlocoParams(pygame.image.load("diamante.png"), 1),
-        VIDA: BlocoParams(pygame.image.load("ruby.png"), 1)
+        VIDA: BlocoParams(pygame.image.load("Heart_0.png"), 1)
 
     }
         
@@ -602,6 +607,8 @@ while ESTADO != ESTADO_TERMINA:
         # Criando os blocos de minerio.       
         tela.criando()
         
+
+        
         ESTADO = ESTADO_JOGO
 
         
@@ -627,6 +634,7 @@ while ESTADO != ESTADO_TERMINA:
         minerador.move()
     
         minerador.colisao_blocos(tela.blocos)
+        
         if minerador.win:
             ESTADO = ESTADO_SUCESSO
     
@@ -705,8 +713,8 @@ while ESTADO != ESTADO_TERMINA:
                 TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
                 gameDisplay.blit(TextSurf1, TextRect)
                 
-                clicou_sucesso = button("JOGAR", 150,450,100,50, green, bright_green)
-                clicou_quit = button("SAIR", 550,450,100,50, red, bright_red)
+                clicou_sucesso = button("RECOMECAR", 450,450,150,75, green, bright_green)
+                clicou_quit = button("SAIR", 850,450,150,75, red, bright_red)
                 
                 if clicou_sucesso:
                     GE = True
@@ -721,5 +729,4 @@ while ESTADO != ESTADO_TERMINA:
                 clock.tick(FPS)
   
         
-    
 
