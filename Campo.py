@@ -1,9 +1,11 @@
 import pygame
 import random
 import time
+from os import path
 from pygame.locals import *
 
-
+img_dir = path.join(path.dirname(__file__), "img")
+snd_dir = path.join(path.dirname(__file__), "snd")
  
 black = (0,0,0)
 white = (255,255,255)
@@ -49,7 +51,15 @@ LINHAS = 18
 COLUNAS = 35
 
 FPS = 30
- 
+
+font_name = pygame.font.match_font("arial")
+#fonte canal do youtube Kids Can Code
+def draw_text(surf, text, size, x, y):
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, white)
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x, y)
+    surf.blit(text_surface, text_rect)
  
 def things(thingx, thingy, thingw, thingh, color):
     pygame.draw.rect(gameDisplay, color, [thingx, thingy, thingw, thingh])
@@ -331,9 +341,9 @@ class Minerador(pygame.sprite.Sprite):
         self.speed = Minerador.params.speed
         self.life = Minerador.params.life
         self.lastclock = pygame.time.get_ticks()
-        self.cooldown = 200
+        self.cooldown = 300
         self.win = False
-        self.lastrect = Rect(self.rect.left, self.rect.top, self.rect.width, self.rect.height)
+
 
     def move(self):
         
@@ -409,6 +419,7 @@ class Minerador(pygame.sprite.Sprite):
             
             #animacao e som
             self.animacao()
+            pica_sound.play()
 
     
             #blocos de graniso sao indestrutiveis
@@ -420,15 +431,19 @@ class Minerador(pygame.sprite.Sprite):
                 bloco.kill()
                 #TNT
                 if bloco.tipo == DINAMITE_VISIVEL:  
+                    random.choice(expl_snd).play()
                     self.life -= 1
                 #TNT escondida - morte
                 if bloco.tipo == DINAMITE_INVISIVEL:  
-                    self.life = 0
+                    random.choice(expl_snd).play()
+                    self.life -= 1
                 #pega vida
                 if bloco.tipo == VIDA:  
+                    life_sound.play()
                     self.life += 1
                 #ganha
                 if bloco.tipo == BANDEIRA:  
+                    win_sound.play()
                     self.win = True
                     
     def animacao(self):
@@ -496,8 +511,23 @@ class Bloco(pygame.sprite.Sprite):
         
  
 pygame.init()
+pygame.mixer.init()
 
 tela = Tela(TAMANHO, LINHAS, COLUNAS)
+#som de explosao  - Kids Can Code
+expl_snd = []
+for snd in ["explosion1.wav", "explosion2.wav", "explosion3.wav"]:
+    expl_snd.append(pygame.mixer.Sound(path.join(snd_dir, snd)))
+    
+life_sound = pygame.mixer.Sound(path.join(snd_dir, "life.wav"))
+pica_sound = pygame.mixer.Sound(path.join(snd_dir, "pica.wav"))
+win_sound = pygame.mixer.Sound(path.join(snd_dir, "win.wav"))
+
+pygame.mixer.music.load(path.join(snd_dir, "menu.wav"))
+pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.play(loops = -1)
+
+
 
 gameDisplay = pygame.display.set_mode((tela.largurat, tela.alturat))
 pygame.display.set_caption('Campo Minado')
@@ -529,11 +559,9 @@ while ESTADO != ESTADO_TERMINA:
             gameDisplay.blit(TextSurf, TextRect)
             
             clicou_jogar = button("COMEÇAR", 450,450,150,75, green, bright_green)
-<<<<<<< HEAD
-            clicou_sair = button("SAIR", 850,450,150,75, red, bright_red)
-=======
+
             clicou_sair = button("TUTORIAL", 850,450,150,75, yellow, bright_yellow)
->>>>>>> a74e19e501a728d0dd35c0414c5ec14e32f54acc
+
             
             if clicou_jogar:
                 intro = False
@@ -663,7 +691,9 @@ while ESTADO != ESTADO_TERMINA:
     
         DISPLAYSURF.blit(fundo, (0, 0))    
     
-        tela.all.draw(DISPLAYSURF) 
+        tela.all.draw(DISPLAYSURF)
+        
+        draw_text(DISPLAYSURF, str(tela.minerador.life), 60, tela.largurat/2, 10)
         
         pygame.display.update()
 
