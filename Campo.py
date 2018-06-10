@@ -275,6 +275,7 @@ class Tela():
         minerador_group.add(minerador)
         all_sprites.add(minerador)
         blocos = pygame.sprite.Group()
+        explosoes = pygame.sprite.Group()
         for linha in range(self.altura):
         
             for coluna in range(self.largura):
@@ -313,7 +314,8 @@ class Tela():
         self.minerador = minerador
         self.all =  all_sprites
         self.blocos = blocos
-
+        self.explosoes = explosoes
+        
 class MineradorParams():
     def __init__(self, direita, esquerda, animacaoD, animacaoE, damage, speed, life):
         self.direita = pygame.image.load(direita)
@@ -377,7 +379,7 @@ class Minerador(pygame.sprite.Sprite):
 
                 
                 
-    def colisao_blocos(self, listaSprites):
+    def colisao_blocos(self, listaSprites, explosoes):
         
         #Se o minerador bate nos blocos 
         for bloco in pygame.sprite.spritecollide(self, listaSprites, False):        
@@ -410,6 +412,7 @@ class Minerador(pygame.sprite.Sprite):
                 self.velocidadey = 0
                 
             self.hit(bloco)
+            
         
     
     def hit(self, bloco):
@@ -432,10 +435,16 @@ class Minerador(pygame.sprite.Sprite):
                 #TNT
                 if bloco.tipo == DINAMITE_VISIVEL:  
                     random.choice(expl_snd).play()
+                    expl = Explosion(bloco.rect.center)
+                    tela.all.add(expl)
+                    tela.explosoes.add(expl)
                     self.life -= 1
                 #TNT escondida - morte
                 if bloco.tipo == DINAMITE_INVISIVEL:  
                     random.choice(expl_snd).play()
+                    expl = Explosion(bloco.rect.center)
+                    tela.all.add(expl)
+                    tela.explosoes.add(expl)
                     self.life -= 1
                 #pega vida
                 if bloco.tipo == VIDA:  
@@ -508,6 +517,49 @@ class Bloco(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = pos_x
         self.rect.y = pos_y
+ 
+#inpirado em canal do youtube Kids Can Code 
+class ExplosionParams:
+    def __init__(self, img):
+        image = pygame.image.load(img)
+        self.image = pygame.transform.scale(image, (50, 50))
+
+
+class Explosion(pygame.sprite.Sprite):
+    
+    params = {
+            'explo00': ExplosionParams('regularExplosion00.png'),
+            'explo01': ExplosionParams('regularExplosion01.png'),
+            'explo02': ExplosionParams('regularExplosion02.png'),
+            'explo03': ExplosionParams('regularExplosion03.png'),
+            'explo04': ExplosionParams('regularExplosion04.png'),
+            'explo05': ExplosionParams('regularExplosion05.png'),
+            'explo06': ExplosionParams('regularExplosion06.png'),
+            'explo07': ExplosionParams('regularExplosion07.png'),
+            'explo08': ExplosionParams('regularExplosion08.png'),
+            }
+    
+    def __init__(self, center):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = self.params['explo00'].image
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+        self.frame = 0
+        self.last_update = pygame.time.get_ticks()
+        self.frame_rate = 50
+        
+    def update(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_update > self.frame_rate:
+            self.last_update = now
+            self.frame += 1
+            if self.frame == len(self.params):
+                self.kill()
+            else:
+                center = self.rect.center
+                self.image = self.params['explo0{}'.format(self.frame)].image
+                self.rect = self.image.get_rect()
+                self.rect.center = center
         
  
 pygame.init()
@@ -527,6 +579,13 @@ pygame.mixer.music.load(path.join(snd_dir, "menu.wav"))
 pygame.mixer.music.set_volume(0.4)
 pygame.mixer.music.play(loops = -1)
 
+#explosoes
+#explosion_anim = []
+#for i in range(9):
+#    filename = 'regularExplosion0{}.png'.format(i)
+#    img = pygame.image.load(path.join(img_dir, filename)).convert()
+#    img.set_colorkey(black)
+#    explosion_anim.append(img)
 
 
 gameDisplay = pygame.display.set_mode((tela.largurat, tela.alturat))
@@ -684,8 +743,9 @@ while ESTADO != ESTADO_TERMINA:
 
         ESTADO = tela.minerador.update()    
         tela.minerador.move()
+        tela.explosoes.update()
     
-        tela.minerador.colisao_blocos(tela.blocos)
+        tela.minerador.colisao_blocos(tela.blocos, tela.explosoes)
         if tela.minerador.win:
             ESTADO = ESTADO_SUCESSO
     
