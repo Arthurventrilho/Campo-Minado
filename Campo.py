@@ -29,6 +29,8 @@ ESTADO_JOGO = 4
 ESTADO_TERMINA = 5
 ESTADO_GAME_OVER = 6
 ESTADO_SUCESSO = 7
+ESTADO_CONTROLE = 8 
+ESTADO_PAUSA = 9
 
 #TIPOS DE BLOCO
 TERRA = 0
@@ -683,13 +685,52 @@ while ESTADO != ESTADO_TERMINA:
             TextRect.center = ((tela.largurat/2),(tela.alturat/1.7))
             tela.display.blit(TextSurf3, TextRect)
             
+            vai_para_controle = button("PROXIMO", 450,500,150,75, green, bright_green)
+            if vai_para_controle:
+                gameExit = True
+                ESTADO = ESTADO_CONTROLE
+            
+            pygame.display.update()
+            clock.tick(FPS)
+            
+    elif ESTADO == ESTADO_CONTROLE:
+        gamExit = False
+        configurar_was_presseds = False
+        
+        while not gamExit:
+     
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+    
+            tela.display.fill(white)
+            largeText = pygame.font.Font('freesansbold.ttf',50)
+            TextSurf, TextRect = text_objects("INFORMAÇÕES:", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/5))
+            tela.display.blit(TextSurf, TextRect)
+            
+            largeText = pygame.font.Font('freesansbold.ttf',20)
+            TextSurf1, TextRect = text_objects("OBJETIVO : pegar a bandeira;", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
+            tela.display.blit(TextSurf1, TextRect)
+            
+            TextSurf2, TextRect = text_objects("CONTROLES: setas direcionais;  ", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/2))
+            tela.display.blit(TextSurf2, TextRect)
+            
+            TextSurf3, TextRect = text_objects("PERIGO: TNT visível e invisível'.", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/1.7))
+            tela.display.blit(TextSurf3, TextRect)
+            
             vai_para_configuration = button("PROXIMO", 625,500,150,75, green, bright_green)
             if vai_para_configuration:
-                gameExit = True
+                gamExit = True
                 ESTADO = ESTADO_COMANDO
             
             pygame.display.update()
             clock.tick(FPS)
+        
     
     #Comando
     elif ESTADO == ESTADO_COMANDO:
@@ -721,7 +762,7 @@ while ESTADO != ESTADO_TERMINA:
             tela.display.blit(TextSurf2, TextRect)
             
 
-            vai_para_jogo = button("JOGAR", 625,550,150,75, green, bright_green)            
+            vai_para_jogo = button("JOGAR", 840,500,150,75, green, bright_green)            
             if vai_para_jogo:
                 GameExit = True
                 print('')
@@ -757,6 +798,11 @@ while ESTADO != ESTADO_TERMINA:
             if event.type == QUIT:
                 pygame.quit()
                 quit()
+            
+                
+        pressed_keys = pygame.key.get_pressed()
+        if pressed_keys[K_ESCAPE]:
+            ESTADO = ESTADO_PAUSA
 
         ESTADO = tela.minerador.update()    
         tela.minerador.move()
@@ -779,6 +825,40 @@ while ESTADO != ESTADO_TERMINA:
         
         pygame.quit()
         quit()
+        
+    elif ESTADO == ESTADO_PAUSA:
+        
+        intros = True
+    
+        while intros:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+                    
+            tela.display.fill(black)
+            tela.display.blit(capa, (0,0))
+    
+            largeText = pygame.font.Font('freesansbold.ttf',110)
+            TextSurf, TextRect = text_objects1("CAMPO MINADO", largeText,)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/3))
+            tela.display.blit(TextSurf, TextRect)
+            
+            clicou_voltar = button("CONTINUAR", 450,450,150,75, green, bright_green)
+
+            clicou_tchau = button("SAIR", 850,450,150,75, yellow, bright_yellow)
+
+            
+            if clicou_voltar:
+                intros = False
+                ESTADO = ESTADO_JOGO
+                
+            if clicou_tchau:
+                intros = False
+                ESTADO = ESTADO_TERMINA
+                
+            pygame.display.update()
+            clock.tick(FPS)
         
     elif ESTADO == ESTADO_GAME_OVER:
         
