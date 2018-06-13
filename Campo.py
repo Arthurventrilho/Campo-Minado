@@ -11,7 +11,7 @@ black = (0,0,0)
 white = (255,255,255)
 red = (200,0,0)
 green = (0,200,0)
-pink = (255,0,255)
+pink = (255,105,180)
 brown = (139,69,19)
 yellow = (200, 200, 0)
 
@@ -40,8 +40,8 @@ VIDA =5
 
 #PARAMS DO MINERADOR
 DANO = 1
-SAUDE = 100
-VELOCIDADE = 5
+SAUDE = 5
+VELOCIDADE = 2
 
 #tamnho da tile
 TAMANHO_BLOCOS = 40
@@ -190,8 +190,7 @@ def button(msg, x, y, w, h, ic, ac):
         
 def game_intro():
     
-    capa = pygame.image.load("capa.png")
-
+    capa = pygame.image.load(path.join(img_dir, "capa.png")).convert()
     intro = True
 
     while intro:
@@ -597,12 +596,18 @@ expl_snd = []
 for snd in ["explosion1.wav", "explosion2.wav", "explosion3.wav"]:
     expl_snd.append(pygame.mixer.Sound(path.join(snd_dir, snd)))
     
+for snd in expl_snd:
+    snd.set_volume(0.5)
+    
 life_sound = pygame.mixer.Sound(path.join(snd_dir, "life.wav"))
+life_sound.set_volume(1)
 pica_sound = pygame.mixer.Sound(path.join(snd_dir, "pica.wav"))
+pica_sound.set_volume(0.2)
 win_sound = pygame.mixer.Sound(path.join(snd_dir, "win.wav"))
+win_sound.set_volume(1)
 
 pygame.mixer.music.load(path.join(snd_dir, "menu.wav"))
-pygame.mixer.music.set_volume(0.4)
+pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(loops = -1)
 
 
@@ -613,7 +618,7 @@ while ESTADO != ESTADO_TERMINA:
     #CAPA
     if ESTADO == ESTADO_CAPA:
     
-        capa = pygame.image.load("capa.png")
+        capa = pygame.image.load(path.join(img_dir, "capa.png")).convert()
         
         intro = True
     
@@ -632,17 +637,16 @@ while ESTADO != ESTADO_TERMINA:
             
             clicou_jogar = button("COMEÇAR", 450,450,150,75, green, bright_green)
 
-            clicou_sair = button("TUTORIAL", 850,450,150,75, yellow, bright_yellow)
+            clicou_tutorial = button("TUTORIAL", 850,450,150,75, yellow, bright_yellow)
 
             
             if clicou_jogar:
                 intro = False
-                ESTADO = ESTADO_INSTRUCAO
+                ESTADO = ESTADO_PREPARO
                 
-            if clicou_sair:
+            if clicou_tutorial:
                 intro = False
-                pygame.quit()
-                quit()
+                ESTADO = ESTADO_INSTRUCAO
                 
             pygame.display.update()
             clock.tick(FPS)
@@ -699,7 +703,7 @@ while ESTADO != ESTADO_TERMINA:
                     quit()
      
             
-            fotoComando = pygame.image.load("fotoComando.png")
+            fotoComando = pygame.image.load(path.join(img_dir, "fotoComando.png")).convert()
             
             tela.display.blit(fotoComando, (0,0))
             largeText = pygame.font.Font('freesansbold.ttf',80)
@@ -778,7 +782,7 @@ while ESTADO != ESTADO_TERMINA:
         
     elif ESTADO == ESTADO_GAME_OVER:
         
-        tela_morreu = pygame.image.load("game_over.png")
+        tela_morreu = pygame.image.load(path.join(img_dir, "game_over.png")).convert()
     
         ge = False
         
@@ -814,7 +818,7 @@ while ESTADO != ESTADO_TERMINA:
         
     elif ESTADO == ESTADO_SUCESSO:
         
-        boa = pygame.image.load("sucess.png")
+        boa = pygame.image.load(path.join(img_dir, "sucess.png")).convert()
     
         GE = False
         
