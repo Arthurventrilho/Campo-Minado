@@ -44,7 +44,7 @@ VIDA =5
 
 #PARAMS DO MINERADOR
 DANO = 1
-SAUDE = 50
+SAUDE = 5
 VELOCIDADE = 2
 
 #tamnho da tile
