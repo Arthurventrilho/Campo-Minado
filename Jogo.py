@@ -134,14 +134,15 @@ tela = Tela(TAMANHO_BLOCOS, N_LINHAS, N_COLUNAS, LARGURA_T, ALTURA_T)
 
 
 font_name = pygame.font.match_font("arial")
-#fonte canal do youtube Kids Can Code
+#fonte canal do youtube Kids Can Code 
 def draw_text(surf, text, size, x, y):
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, white)
     text_rect = text_surface.get_rect()
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
- 
+    
+#http://usingpython.com/pygame/ 
 def things(thingx, thingy, thingw, thingh, color):
     pygame.draw.rect(tela.display, color, [thingx, thingy, thingw, thingh])
  
@@ -166,7 +167,7 @@ def message_display(text):
  
     
     
-# Codigo adaptado de ...
+# http://usingpython.com/pygame/
 def button(msg, x, y, w, h, ic, ac):
     mouse = pygame.mouse.get_pos() 
 
@@ -404,7 +405,7 @@ class Minerador(pygame.sprite.Sprite):
         
 
                 
-                
+    """Baseado em https://github.com/mchr3k/bounce-game/blob/master/bounce.py"""                       
     def colisao_blocos(self, listaSprites, explosoes):
         
         #Se o minerador bate nos blocos 
