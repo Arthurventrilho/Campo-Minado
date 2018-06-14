@@ -42,7 +42,7 @@ VIDA =5
 
 #PARAMS DO MINERADOR
 DANO = 1
-SAUDE = 5
+SAUDE = 50
 VELOCIDADE = 2
 
 #tamnho da tile
@@ -711,17 +711,21 @@ while ESTADO != ESTADO_TERMINA:
             tela.display.blit(TextSurf, TextRect)
             
             largeText = pygame.font.Font('freesansbold.ttf',20)
-            TextSurf1, TextRect = text_objects("OBJETIVO : pegar a bandeira;", largeText)
+            TextSurf1, TextRect = text_objects("OBJETIVO : Pegar a bandeira;", largeText)
             TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
             tela.display.blit(TextSurf1, TextRect)
             
-            TextSurf2, TextRect = text_objects("CONTROLES: setas direcionais;  ", largeText)
-            TextRect.center = ((tela.largurat/2),(tela.alturat/2))
+            TextSurf2, TextRect = text_objects("CONTROLES: Setas direcionais;  ", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/2.1))
             tela.display.blit(TextSurf2, TextRect)
             
             TextSurf3, TextRect = text_objects("PERIGO: TNT visível e invisível'.", largeText)
-            TextRect.center = ((tela.largurat/2),(tela.alturat/1.7))
+            TextRect.center = ((tela.largurat/2),(tela.alturat/1.8))
             tela.display.blit(TextSurf3, TextRect)
+            
+            TextSurf4, TextRect = text_objects("VOLTAR MENU: Botão ESC'.", largeText)
+            TextRect.center = ((tela.largurat/2),(tela.alturat/1.6))
+            tela.display.blit(TextSurf4, TextRect)
             
             vai_para_configuration = button("PROXIMO", 625,500,150,75, green, bright_green)
             if vai_para_configuration:
@@ -800,13 +804,14 @@ while ESTADO != ESTADO_TERMINA:
                 quit()
             
                 
-        pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[K_ESCAPE]:
-            ESTADO = ESTADO_PAUSA
-
+        chave = pygame.key.get_pressed()
+        
         ESTADO = tela.minerador.update()    
         tela.minerador.move()
         tela.explosoes.update()
+        
+        if chave[K_ESCAPE]:
+            ESTADO = ESTADO_CAPA
     
         tela.minerador.colisao_blocos(tela.blocos, tela.explosoes)
         if tela.minerador.win:
@@ -826,40 +831,7 @@ while ESTADO != ESTADO_TERMINA:
         pygame.quit()
         quit()
         
-    elif ESTADO == ESTADO_PAUSA:
-        
-        intros = True
-    
-        while intros:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    quit()
-                    
-            tela.display.fill(black)
-            tela.display.blit(capa, (0,0))
-    
-            largeText = pygame.font.Font('freesansbold.ttf',110)
-            TextSurf, TextRect = text_objects1("CAMPO MINADO", largeText,)
-            TextRect.center = ((tela.largurat/2),(tela.alturat/3))
-            tela.display.blit(TextSurf, TextRect)
-            
-            clicou_voltar = button("CONTINUAR", 450,450,150,75, green, bright_green)
-
-            clicou_tchau = button("SAIR", 850,450,150,75, yellow, bright_yellow)
-
-            
-            if clicou_voltar:
-                intros = False
-                ESTADO = ESTADO_JOGO
-                
-            if clicou_tchau:
-                intros = False
-                ESTADO = ESTADO_TERMINA
-                
-            pygame.display.update()
-            clock.tick(FPS)
-        
+       
     elif ESTADO == ESTADO_GAME_OVER:
         
         tela_morreu = pygame.image.load(path.join(img_dir, "game_over.png")).convert()
@@ -921,8 +893,8 @@ while ESTADO != ESTADO_TERMINA:
                 TextRect.center = ((tela.largurat/2),(tela.alturat/2.4))
                 tela.display.blit(TextSurf1, TextRect)
                 
-                clicou_sucesso = button("JOGAR", 150,450,100,50, green, bright_green)
-                clicou_quit = button("SAIR", 550,450,100,50, red, bright_red)
+                clicou_sucesso = button("JOGAR", 450,450,100,50, green, bright_green)
+                clicou_quit = button("SAIR", 850,450,100,50, red, bright_red)
                 
                 if clicou_sucesso:
                     GE = True
