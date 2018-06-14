@@ -4,6 +4,8 @@ import time
 from os import path
 from pygame.locals import *
 
+
+#baseado em Kids Can Code
 img_dir = path.join(path.dirname(__file__), "img")
 snd_dir = path.join(path.dirname(__file__), "snd")
  
