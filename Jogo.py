@@ -612,7 +612,7 @@ pica_sound.set_volume(0.2)
 win_sound = pygame.mixer.Sound(path.join(snd_dir, "win.wav"))
 win_sound.set_volume(1)
 
-pygame.mixer.music.load(path.join(snd_dir, "menu.wav"))
+pygame.mixer.music.load(path.join(snd_dir, "musica.wav"))
 pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(loops = -1)
 
@@ -636,7 +636,7 @@ while ESTADO != ESTADO_TERMINA:
     
             tela.display.blit(capa, (0,0))
     
-            largeText = pygame.font.Font('freesansbold.ttf',110)
+            largeText = pygame.font.Font('3Dumb.ttf',110)
             TextSurf, TextRect = text_objects1("CAMPO MINADO", largeText,)
             TextRect.center = ((tela.largurat/2),(tela.alturat/3))
             tela.display.blit(TextSurf, TextRect)
@@ -671,7 +671,7 @@ while ESTADO != ESTADO_TERMINA:
                     quit()
     
             tela.display.fill(white)
-            largeText = pygame.font.Font('freesansbold.ttf',50)
+            largeText = pygame.font.Font('3Dumb.ttf',50)
             TextSurf, TextRect = text_objects("Sobre o jogo:", largeText)
             TextRect.center = ((tela.largurat/2),(tela.alturat/5))
             tela.display.blit(TextSurf, TextRect)
@@ -709,7 +709,7 @@ while ESTADO != ESTADO_TERMINA:
                     quit()
     
             tela.display.fill(white)
-            largeText = pygame.font.Font('freesansbold.ttf',50)
+            largeText = pygame.font.Font('3Dumb.ttf',50)
             TextSurf, TextRect = text_objects("INFORMAÇÕES:", largeText)
             TextRect.center = ((tela.largurat/2),(tela.alturat/5))
             tela.display.blit(TextSurf, TextRect)
