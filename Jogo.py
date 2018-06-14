@@ -594,7 +594,7 @@ class Explosion(pygame.sprite.Sprite):
         
  
 
-#som de explosao  - Kids Can Code
+#som de explosao  - Kids Can Code e https://www.bfxr.net/
 expl_snd = []
 for snd in ["explosion1.wav", "explosion2.wav", "explosion3.wav"]:
     expl_snd.append(pygame.mixer.Sound(path.join(snd_dir, snd)))
@@ -602,6 +602,7 @@ for snd in ["explosion1.wav", "explosion2.wav", "explosion3.wav"]:
 for snd in expl_snd:
     snd.set_volume(0.5)
     
+#https://www.bfxr.net/    
 life_sound = pygame.mixer.Sound(path.join(snd_dir, "life.wav"))
 life_sound.set_volume(1)
 pica_sound = pygame.mixer.Sound(path.join(snd_dir, "pica.wav"))
